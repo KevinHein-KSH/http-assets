@@ -1,0 +1,9 @@
+import FetchData from './components/Fetch_API/fetchCall';
+
+export default function App() {
+    return (
+        <>
+            <FetchData />
+        </>
+    );
+}
