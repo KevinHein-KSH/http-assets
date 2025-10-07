@@ -68,6 +68,15 @@ export default function FetchData() {
       >
         {loading ? "Loading..." : "Fetch Users"}
       </button>
+      <button
+        onClick={() => {
+          setUsers([]);
+          setError(null);
+        }}
+        disabled={loading || users.length === 0}
+      >
+        Clear Users
+      </button>
       
        {/* error handling messages */}
       {error && <p role="alert">Error: {error}</p>}
