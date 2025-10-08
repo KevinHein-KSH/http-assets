@@ -7,10 +7,15 @@ export default function UrlViewer() {
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState("");
 
-  function handleParse(inputUrl: string) {
+  const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
+  async function handleParse(inputUrl: string) {
     setLoading(true);
     setError(null);
     setUrl(null);
+
+    await delay(1000); // simulate loading
+
     try {
       const parsedUrl = normalizeDomain(inputUrl);
       if (parsedUrl instanceof URL) {
@@ -35,11 +40,25 @@ export default function UrlViewer() {
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => {
+        if (e.key === 'Enter' && input.trim()) {
+            e.preventDefault();
+          handleParse(input);
+            }}}
         placeholder="Enter a URL"
         style={{ width: "500px" }}
       />
       <button onClick={() => handleParse(input)} disabled={loading}>
         {loading ? "Parsing..." : "Parse URL"}
+      </button>
+      <button
+        onClick={() => {
+          setUrl(null);
+          setError(null);
+        }}
+        disabled={loading || !(url instanceof URL)}
+      >
+        Clear
       </button>
 
       {error && <p style={{ color: "red" }}>{error}</p>}

@@ -74,7 +74,7 @@ export default function FetchIPAddress() {
       </button>
 
       {error && <p role="alert">Error: {error}</p>}
-      {!error && !loading && !ipAddress && <p>No data fetched yet.</p>}
+      {!error && !loading && !ipAddress && <p>No data fetched yet!</p>}
       {ipAddress && <p>IP Address: {ipAddress}</p>}
     </>
   );
