@@ -32,3 +32,21 @@ input:focus {
     border-color: #975fc2;
     outline: none;
 }
+table {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+ /* Key-Value table styles */
+.kv { border-collapse: collapse; }
+.kcol { width: 160px; }              /* pick a width you like */
+.kv td.key {
+  position: relative;
+  padding-right: 1.25rem;           /* room for the colon */
+}
+.kv td.key::after {
+  content: ":";
+  position: absolute;
+  right: .25rem;                    /* bump off the edge a bit */
+  top: 0;
+}
