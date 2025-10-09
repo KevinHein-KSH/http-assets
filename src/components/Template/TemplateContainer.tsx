@@ -21,7 +21,7 @@ export default function TemplateContainer() {
               onOpenCapstone={() => setView({ type: "item", id: capstoneId })}
             />
           ) : (
-            <ItemView key={view.id} id={view.id} />
+            <ItemView id={view.id} />
           )}
         </AnimatePresence>
       </div>

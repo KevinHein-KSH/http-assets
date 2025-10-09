@@ -34,4 +34,4 @@ export const chapters: Chapter[] = [
 export const firstChapterId = chapters.find((c) => c.kind === "chapter")?.id ?? "ch-01";
 export const capstoneId = chapters.find((c) => c.kind === "project")?.id ?? "project-final";
 
-export type View = { type: "home" } | { type: "item"; id: String | undefined };
+export type View = { type: "home" } | { type: "item"; id: string };
