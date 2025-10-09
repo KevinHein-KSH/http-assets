@@ -1,11 +1,15 @@
-export const chapters: Array<{
+type ChapterKind = "chapter" | "project";
+
+interface Chapter {
   id: string;
   label: string;
-  kind: "chapter" | "project";
+  kind: ChapterKind;
   description?: string;
   href?: string;
   externalUrl?: string;
-}> = [
+}
+
+export const chapters: Chapter[] = [
   { id: "ch-01", label: "Chapter 1", kind: "chapter", description: "Intro & Basics" },
   { id: "ch-02", label: "Chapter 2", kind: "chapter", description: "State & Props" },
   { id: "ch-03", label: "Chapter 3", kind: "chapter", description: "Lists & Keys" },

@@ -1,15 +1,9 @@
 import { Layers, HomeIcon, Github } from "lucide-react";
 import { Button } from "@mui/material";
-import Select from '@mui/material/Select';
-import {
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@mui/material/Select";
 import { chapters } from "../../types/chapters";
 import { View } from "../../types/chapters";
 import { appConfig } from "../../config/appConfig";
+import FormDropDown from "./FormDropDown";
 
 export default function HeaderBar({ view, setView }: { view: View; setView: (v: View) => void }) {
   return (
@@ -28,8 +22,8 @@ export default function HeaderBar({ view, setView }: { view: View; setView: (v: 
         </div>
         <div className="ml-auto flex items-center gap-2">
           <Button
-            variant="ghost"
-            size="sm"
+            variant="text"
+            size="small"
             onClick={() => setView({ type: "home" })}
             className="hover:bg-primary/10 focus-visible:ring-2 focus-visible:ring-primary"
           >
@@ -37,42 +31,18 @@ export default function HeaderBar({ view, setView }: { view: View; setView: (v: 
           </Button>
           <div className="flex items-center gap-2">
             <label className="sr-only">Select chapter</label>
-            <Select
-              onChange={(val) => setView({ type: "item", id: val.target.value })}
-              value={view.type === "item" ? view.id : undefined}
-            >
-              <SelectTrigger className="w-[240px] hover:bg-accent/40 focus-visible:ring-2 focus-visible:ring-primary">
-                <SelectValue placeholder="Chapters & Project" />
-              </SelectTrigger>
-              <SelectContent className="backdrop-blur border-primary/30">
-                <div className="px-2 py-1 text-xs font-semibold uppercase tracking-wider text-primary">Chapters</div>
-                {chapters
-                  .filter((c) => c.kind === "chapter")
-                  .map((c) => (
-                    <SelectItem key={c.id} value={c.id} className="focus:bg-primary/10">
-                      {c.label}
-                    </SelectItem>
-                  ))}
-                <div className="px-2 pt-2 text-xs font-semibold uppercase tracking-wider text-purple-600">Project</div>
-                {chapters
-                  .filter((c) => c.kind === "project")
-                  .map((p) => (
-                    <SelectItem key={p.id} value={p.id} className="focus:bg-primary/10">
-                      {p.label}
-                    </SelectItem>
-                  ))}
-              </SelectContent>
-            </Select>
+            <FormDropDown view={view} setView={setView} />
           </div>
           <Button
-            variant="ghost"
-            size="sm"
-            asChild
+            variant="text"
+            size="small"
+            component="a"
+            href={appConfig.repoUrl}
+            target="_blank"
+            rel="noreferrer"
             className="hover:bg-primary/10 focus-visible:ring-2 focus-visible:ring-primary"
           >
-            <a href={appConfig.repoUrl} target="_blank" rel="noreferrer">
-              <Github className="mr-2 size-4" /> GitHub
-            </a>
+            <Github className="mr-2 size-4" /> GitHub
           </Button>
         </div>
       </div>
@@ -85,8 +55,8 @@ export default function HeaderBar({ view, setView }: { view: View; setView: (v: 
                 <Button
                   key={c.id}
                   onClick={() => setView({ type: "item", id: c.id })}
-                  size="sm"
-                  variant={view.type === "item" && view.id === c.id ? "secondary" : "ghost"}
+                  size="small"
+                  variant={view.type === "item" && view.id === c.id ? "contained" : "text"}
                   aria-current={view.type === "item" && view.id === c.id ? "page" : undefined}
                   className={`whitespace-nowrap rounded-xl focus-visible:ring-2 focus-visible:ring-primary ${
                     view.type === "item" && view.id === c.id
@@ -103,8 +73,8 @@ export default function HeaderBar({ view, setView }: { view: View; setView: (v: 
                 <Button
                   key={p.id}
                   onClick={() => setView({ type: "item", id: p.id })}
-                  size="sm"
-                  variant={view.type === "item" && view.id === p.id ? "secondary" : "ghost"}
+                  size="small"
+                  variant={view.type === "item" && view.id === p.id ? "contained" : "text"}
                   aria-current={view.type === "item" && view.id === p.id ? "page" : undefined}
                   className={`whitespace-nowrap rounded-xl focus-visible:ring-2 focus-visible:ring-primary ${
                     view.type === "item" && view.id === p.id
