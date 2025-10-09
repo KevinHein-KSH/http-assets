@@ -36,6 +36,9 @@ export default function UrlViewer() {
   return (
     <>
       <h2>URL Parts Viewer</h2>
+
+      <p>Use this e.g url: http://dragonslayer:pwn3d@fantasyquest.com:8080/maps?sort=rank#id</p>
+
       <input
         type="text"
         value={input}
@@ -138,3 +141,7 @@ export default function UrlViewer() {
     </>
   );
 }
+
+
+// add mailto
+// remove # and ? in search and hash 
