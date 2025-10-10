@@ -7,14 +7,10 @@ export default function UrlViewer() {
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState("");
 
-  const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
-
   async function handleParse(inputUrl: string) {
     setLoading(true);
     setError(null);
     setUrl(null);
-
-    await delay(1000); // simulate loading
 
     try {
       const parsedUrl = normalizeDomain(inputUrl);
