@@ -1,3 +1,18 @@
+@import "tailwindcss";   /* v4 style */
+
+/* Design tokens used by Tailwind utilities */
+:root {
+  /* Base colors (HSL) */
+  --background: 0 0% 100%;            /* white */
+  --foreground: 222.2 47.4% 11.2%;    /* zinc-900-ish */
+
+  --muted: 210 40% 96.1%;             /* zinc-100-ish */
+
+  /* Brand */
+  --primary: 262.1 83.3% 57.8%;       /* purple-600 */
+  --primary-foreground: 210 40% 98%;  /* near white */
+}
+
 h1, h2, h3 {
     padding-bottom: 0;
     margin-bottom: 0;

@@ -30,7 +30,7 @@ export default function HeaderBar({ view, setView }: { view: View; setView: (v: 
             <HomeIcon className="mr-2 size-4" /> Home
           </Button>
           <div className="flex items-center gap-2">
-            <label className="sr-only">Select chapter</label>
+            {/* <label className="sr-only">Select chapter</label> */}
             <FormDropDown view={view} setView={setView} />
           </div>
           <Button

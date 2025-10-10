@@ -26,8 +26,13 @@ export default function TemplateContainer() {
         </AnimatePresence>
       </div>
       <footer className="border-t py-6 text-center text-sm">
-        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary/10 text-primary font-medium">Built with ❤ — Chapters & Capstone</span>
+        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary/10 text-primary font-medium">
+          Built with ❤ — Chapters & Capstone
+        </span>
       </footer>
+      <div className="rounded-full bg-gradient-to-r from-gray-100 to-gray-200 px-4 py-2">
+        Tailwind is working 🎉
+      </div>
     </div>
   );
 }
