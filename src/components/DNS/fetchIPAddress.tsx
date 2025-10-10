@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { normalizeDomain } from "../../utils/urlUtil";
 
 export default function FetchIPAddress() {
   const [loading, setLoading] = useState(false);
@@ -6,28 +7,15 @@ export default function FetchIPAddress() {
   const [domain, setDomain] = useState("");
   const [ipAddress, setIpAddress] = useState<string>("");
 
-  function normalizeDomain(raw: string) {
-    try {
-      const trimmed = raw.trim();
-      if (!trimmed) return "";
-      // Strip protocol and path if user pastes a full URL
-      const url = trimmed.includes("://") ? new URL(trimmed) : new URL("http://" + trimmed);
-      return url.hostname.replace(/\.$/, ""); // remove trailing dot
-    } catch {
-      return raw.trim();
-    }
-  }
-
   // this require the input to be a full URL if it has protocol
-  function getDomainFromURL(url: string) {
-    const u = new URL(url);
-    return u.hostname;
-  }
+  // function getDomainFromURL(url: string) {
+  //   const u = new URL(url);
+  //   return u.hostname;
+  // }
 
   async function fetchIPAddress(rawDomain: string) {
-    const name = normalizeDomain(rawDomain);
-
-    // console.log("Fetching IP for domain:", getDomainFromURL(rawDomain));
+    const url = normalizeDomain(rawDomain);
+    const name = typeof url === "string" ? url : url.hostname.replace(/\.$/, ""); // remove trailing dot
 
     if (!name) {
       setError("Please enter a domain.");
@@ -86,7 +74,7 @@ export default function FetchIPAddress() {
       </button>
 
       {error && <p role="alert">Error: {error}</p>}
-      {!error && !loading && !ipAddress && <p>No data fetched yet.</p>}
+      {!error && !loading && !ipAddress && <p>No data fetched yet!</p>}
       {ipAddress && <p>IP Address: {ipAddress}</p>}
     </>
   );
