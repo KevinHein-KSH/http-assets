@@ -7,32 +7,40 @@ import FormDropDown from "./FormDropDown";
 
 export default function HeaderBar({ view, setView }: { view: View; setView: (v: View) => void }) {
   return (
-    <div className="sticky top-0 z-30 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className="sticky top-0 z-30 border-b bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
       <div className="mx-auto max-w-7xl px-4 py-3 flex items-center gap-3">
         <div
           className="flex items-center gap-2 cursor-pointer select-none"
           onClick={() => setView({ type: "home" })}
         >
-          <span className="inline-flex size-8 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/90 to-purple-600 text-white shadow-sm">
-            <Layers className="size-4" />
+          <span className="inline-flex w-8 h-8 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 text-white shadow-sm">
+            <Layers className="w-4 h-4" />
           </span>
           <span className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
             {appConfig.title}
           </span>
         </div>
+
+
         <div className="ml-auto flex items-center gap-2">
+
+
           <Button
             variant="text"
             size="small"
             onClick={() => setView({ type: "home" })}
-            className="hover:bg-primary/10 focus-visible:ring-2 focus-visible:ring-primary"
+            color="inherit"
+            className="!text-gray-900"
           >
-            <HomeIcon className="mr-2 size-4" /> Home
+            <HomeIcon className="mr-2 w-4 h-4" /> Home
           </Button>
+
+
           <div className="flex items-center gap-2">
-            {/* <label className="sr-only">Select chapter</label> */}
             <FormDropDown view={view} setView={setView} />
           </div>
+          
+
           <Button
             variant="text"
             size="small"
@@ -40,12 +48,12 @@ export default function HeaderBar({ view, setView }: { view: View; setView: (v: 
             href={appConfig.repoUrl}
             target="_blank"
             rel="noreferrer"
-            className="hover:bg-primary/10 focus-visible:ring-2 focus-visible:ring-primary"
           >
-            <Github className="mr-2 size-4" /> GitHub
+            <Github className="mr-2 w-4 h-4" /> GitHub
           </Button>
         </div>
       </div>
+      
       <div className="mx-auto max-w-7xl px-4 pb-3">
         <div className="rounded-2xl bg-gradient-to-r from-primary/10 via-purple-600/10 to-primary/10 p-1 overflow-x-auto">
           <div className="flex items-center gap-1 min-w-max">
@@ -60,8 +68,8 @@ export default function HeaderBar({ view, setView }: { view: View; setView: (v: 
                   aria-current={view.type === "item" && view.id === c.id ? "page" : undefined}
                   className={`whitespace-nowrap rounded-xl focus-visible:ring-2 focus-visible:ring-primary ${
                     view.type === "item" && view.id === c.id
-                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                      : "hover:bg-primary/10"
+                      ? "bg-blue-600 text-blue-600-foreground hover:bg-blue-600/90"
+                      : "hover:bg-blue-600/10"
                   }`}
                 >
                   {c.label}
@@ -94,9 +102,9 @@ export default function HeaderBar({ view, setView }: { view: View; setView: (v: 
             if (!active) return null;
             return (
               <>
-                <span className="text-foreground/80">Currently viewing:</span>{" "}
-                <span className="font-semibold text-primary">{active.label}</span>
-                {active.description ? <span className="text-foreground/70"> — {active.description}</span> : null}
+                <span className="text-gray-900/80">Currently viewing:</span>{" "}
+                <span className="font-semibold text-blue-600">{active.label}</span>
+                {active.description ? <span className="text-gray-900/70"> — {active.description}</span> : null}
               </>
             );
           })()}

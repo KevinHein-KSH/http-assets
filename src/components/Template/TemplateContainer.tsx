@@ -30,9 +30,6 @@ export default function TemplateContainer() {
           Built with ❤ — Chapters & Capstone
         </span>
       </footer>
-      <div className="rounded-full bg-gradient-to-r from-gray-100 to-gray-200 px-4 py-2">
-        Tailwind is working 🎉
-      </div>
     </div>
   );
 }

@@ -1,17 +1,21 @@
 @import "tailwindcss";   /* v4 style */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Design tokens used by Tailwind utilities */
-:root {
-  /* Base colors (HSL) */
-  --background: 0 0% 100%;            /* white */
-  --foreground: 222.2 47.4% 11.2%;    /* zinc-900-ish */
+/* :root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+} */
 
-  --muted: 210 40% 96.1%;             /* zinc-100-ish */
-
-  /* Brand */
-  --primary: 262.1 83.3% 57.8%;       /* purple-600 */
-  --primary-foreground: 210 40% 98%;  /* near white */
-}
+/* .dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --primary: 217.2 91.2% 59.8%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+} */
 
 h1, h2, h3 {
     padding-bottom: 0;
@@ -22,7 +26,7 @@ body {
     margin: 20px;
     padding: 0;
 }
-button {
+/* button {
     background-color: #4d0d7e;
     color: white;
     border: none;
@@ -34,7 +38,7 @@ button {
 }
 button:hover {
    background-color: #5e0ea1;
-}
+} */
 input {
     padding: 10px;
     font-size: 16px;
