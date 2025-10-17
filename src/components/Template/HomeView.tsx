@@ -27,7 +27,7 @@ export default function HomeView({
             title={
               <Typography
                 variant="h4"
-                className="!text-3xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600"
+                className="!text-3xl bg-clip-text"
               >
                 What is this?
               </Typography>
@@ -78,7 +78,7 @@ export default function HomeView({
 
         <CardContent className="space-y-3">
           <div className="text-sm">
-            <div className="font-medium">{appConfig.tutorial.name}asdfasd</div>
+            <div className="font-medium">{appConfig.tutorial.name}</div>
             {appConfig.tutorial.note && (
               <div className="opacity-70 mt-1">{appConfig.tutorial.note}</div>
             )}

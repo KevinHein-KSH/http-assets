@@ -13,10 +13,10 @@ export default function HeaderBar({ view, setView }: { view: View; setView: (v: 
           className="flex items-center gap-2 cursor-pointer select-none"
           onClick={() => setView({ type: "home" })}
         >
-          <span className="inline-flex w-8 h-8 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 text-white shadow-sm">
+          <span className="inline-flex w-8 h-8 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-blue-900 text-white shadow-sm">
             <Layers className="w-4 h-4" />
           </span>
-          <span className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
+          <span className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-950 to-purple-600">
             {appConfig.title}
           </span>
         </div>
@@ -55,8 +55,8 @@ export default function HeaderBar({ view, setView }: { view: View; setView: (v: 
       </div>
       
       <div className="mx-auto max-w-7xl px-4 pb-3">
-        <div className="rounded-2xl bg-gradient-to-r from-primary/10 via-purple-600/10 to-primary/10 p-1 overflow-x-auto">
-          <div className="flex items-center gap-1 min-w-max">
+        <div className="rounded-2xl bg-gradient-to-r from-primary via-purple-600/15 to-primary p-1 overflow-x-auto bg-gray-100">
+          <div className="flex items-center justify-around gap-1 min-w-max">
             {chapters
               .filter((c) => c.kind === "chapter")
               .map((c) => (
