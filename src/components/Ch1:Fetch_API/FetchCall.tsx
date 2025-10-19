@@ -36,7 +36,6 @@ export default function FetchData() {
   async function insertUrl() {
     setLoading(true);
     setError(null);
-
     // will use dynamice URL later
     // will add error handling later chapter
     const res = await getUsers("https://api.escuelajs.co/api/v1/users");
