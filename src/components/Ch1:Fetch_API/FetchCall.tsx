@@ -15,7 +15,7 @@ export default function FetchData() {
   const [users, setUsers] = useState<ApiUser[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   async function getUsers(url: string): Promise<ApiUser[]> {
     const data = await fetch(url)
       .then((res) => {
@@ -36,17 +36,12 @@ export default function FetchData() {
   async function insertUrl() {
     setLoading(true);
     setError(null);
-    try {
-      // will use dynamice URL later
-      const res = await getUsers("https://api.escuelajs.co/api/v1/users");
-      setUsers(res);
-      console.log("Fetched users in App:", res);
-    } catch (error) {
-      console.error("Error in App while fetching users:", error);
-      setError((error as Error).message);
-    } finally {
-      setLoading(false);
-    }
+    // will use dynamice URL later
+    // will add error handling later chapter
+    const res = await getUsers("https://api.escuelajs.co/api/v1/users");
+    setUsers(res);
+    console.log("Fetched users in App:", res);
+    setLoading(false);
   }
 
   const message = users.length === 0 ? <p>Data haven't fetch yet!</p> : null;
@@ -77,17 +72,17 @@ export default function FetchData() {
       >
         Clear Users
       </button>
-      
-       {/* error handling messages */}
+
+      {/* error handling messages */}
       {error && <p role="alert">Error: {error}</p>}
       {users.length === 0 && getMessage()}
 
       <ul id="userList">
-        { users.map((user) => (
+        {users.map((user) => (
           <li key={user.id}>
             {user.name} ({user.email}) - Role: {user.role}
           </li>
-        )) }
+        ))}
       </ul>
     </>
   );
