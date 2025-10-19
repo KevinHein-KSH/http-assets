@@ -1,4 +1,4 @@
-import FetchData from './components/Fetch_API/fetchCall';
+import FetchData from './components/Fetch_API/FetchCall';
 
 export default function App() {
     return (
