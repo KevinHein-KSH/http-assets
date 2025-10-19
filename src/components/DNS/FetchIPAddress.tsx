@@ -7,15 +7,13 @@ export default function FetchIPAddress() {
   const [ipAddress, setIpAddress] = useState<string>("");
 
   function normalizeDomain(raw: string) {
-    try {
-      const trimmed = raw.trim();
+    const trimmed = raw.trim();
       if (!trimmed) return "";
       // Strip protocol and path if user pastes a full URL
-      const url = trimmed.includes("://") ? new URL(trimmed) : new URL("http://" + trimmed);
+      const url = trimmed.includes("://")
+        ? new URL(trimmed)
+        : new URL("http://" + trimmed);
       return url.hostname.replace(/\.$/, ""); // remove trailing dot
-    } catch {
-      return raw.trim();
-    }
   }
 
   // this require the input to be a full URL if it has protocol
@@ -38,31 +36,29 @@ export default function FetchIPAddress() {
     setError(null);
     setIpAddress("");
 
-    try {
-      const resp = await fetch(
-        `https://cloudflare-dns.com/dns-query?name=${name}&type=A`,
-        { headers: { Accept: "application/dns-json" } }
-      );
+    const resp = await fetch(
+      `https://cloudflare-dns.com/dns-query?name=${name}&type=A`,
+      { headers: { Accept: "application/dns-json" } }
+    );
 
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const data = await resp.json();
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
 
-      // data.Answer can be undefined on NXDOMAIN / NOERROR-NODATA
-      const answers = Array.isArray(data.Answer) ? data.Answer : [];
-      const aRecords = answers.filter((ans: any) => ans.type === 1 && typeof ans.data === "string");
+    // data.Answer can be undefined on NXDOMAIN / NOERROR-NODATA
+    const answers = Array.isArray(data.Answer) ? data.Answer : [];
+    const aRecords = answers.filter(
+      (ans: any) => ans.type === 1 && typeof ans.data === "string"
+    );
 
-      if (aRecords.length === 0) {
-        setError("No A records found for this domain.");
-        return;
-      }
-
-      // If you want just the first, keep the first; otherwise join.
-      setIpAddress(aRecords.map((a: any) => a.data).join(", "));
-    } catch (e: any) {
-      setError(e?.message ?? "Failed to fetch DNS data.");
-    } finally {
+    if (aRecords.length === 0) {
+      setError("No A records found for this domain.");
       setLoading(false);
+      return;
     }
+
+    // If you want just the first, keep the first; otherwise join.
+    setIpAddress(aRecords.map((a: any) => a.data).join(", "));
+    setLoading(false);
   }
 
   return (
@@ -75,13 +71,17 @@ export default function FetchIPAddress() {
         value={domain}
         onChange={(e) => setDomain(e.target.value)}
         onKeyDown={(e) => {
-        if (e.key === 'Enter' && domain.trim()) {
+          if (e.key === "Enter" && domain.trim()) {
             e.preventDefault();
-          fetchIPAddress(domain);
-            }}}
+            fetchIPAddress(domain);
+          }
+        }}
       />
 
-      <button onClick={() => fetchIPAddress(domain)} disabled={loading || !domain.trim()}>
+      <button
+        onClick={() => fetchIPAddress(domain)}
+        disabled={loading || !domain.trim()}
+      >
         {loading ? "Loading..." : "IP Fetch"}
       </button>
 
