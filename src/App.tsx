@@ -1,6 +1,6 @@
-import FetchIPAddress from './components/Ch2:DNS/FetchIPAddress';
-import FetchData from './components/Ch1:Fetch_API/FetchCall';
-import UrlViewer from './components/Ch4:URL | Async/URLParts';
+import FetchIPAddress from './components/DNS/FetchIPAddress';
+import FetchData from './components/Fetch_API/FetchCall';
+import UrlViewer from './components/URL | Async/URLParts';
 
 export default function App() {
     return (
