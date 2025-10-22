@@ -22,7 +22,7 @@ export default function FetchIPAddress() {
     return u.hostname;
   }
 
-  async function fetchIPAddress(rawDomain: string) {
+  function fetchIPAddress(rawDomain: string) {
     const name = normalizeDomain(rawDomain);
 
     // console.log("Fetching IP for domain:", getDomainFromURL(rawDomain));
@@ -36,29 +36,32 @@ export default function FetchIPAddress() {
     setError(null);
     setIpAddress("");
 
-    const resp = await fetch(
+    fetch(
       `https://cloudflare-dns.com/dns-query?name=${name}&type=A`,
-      { headers: { Accept: "application/dns-json" } }
-    );
+       { headers: { Accept: "application/dns-json" } }
+    ).then((res) => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    })
+    .then((data) => {
+      // console.log("DNS response data:", data);
+      const answers = Array.isArray(data.Answer) ? data.Answer : [];
+      const aRecords = answers.filter(
+        (ans: any) => ans.type === 1 && typeof ans.data === "string"
+      );
 
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const data = await resp.json();
+      if (aRecords.length === 0) {
+        setError("No A records found for this domain.");
+        return;
+      }
 
-    // data.Answer can be undefined on NXDOMAIN / NOERROR-NODATA
-    const answers = Array.isArray(data.Answer) ? data.Answer : [];
-    const aRecords = answers.filter(
-      (ans: any) => ans.type === 1 && typeof ans.data === "string"
-    );
-
-    if (aRecords.length === 0) {
-      setError("No A records found for this domain.");
-      setLoading(false);
-      return;
-    }
-
-    // If you want just the first, keep the first; otherwise join.
-    setIpAddress(aRecords.map((a: any) => a.data).join(", "));
-    setLoading(false);
+      // If you want just the first, keep the first; otherwise join.
+      setIpAddress(aRecords.map((a: any) => a.data).join(", "));
+    })
+    .catch((err) => {
+      setError(err instanceof Error ? err.message : String(err));
+    })
+    .finally(() => setLoading(false));
   }
 
   return (
