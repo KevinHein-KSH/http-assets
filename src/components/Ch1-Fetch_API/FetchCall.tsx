@@ -27,7 +27,6 @@ export default function FetchData() {
   function insertUrl() {
     setLoading(true);
     setError(null);
-    let v;
     // will use dynamice URL later
     // will add error handling later chapter
     // will update with async/await later chapter
