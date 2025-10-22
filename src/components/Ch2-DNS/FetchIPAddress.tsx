@@ -13,9 +13,10 @@ export default function FetchIPAddress() {
   //   return u.hostname;
   // }
 
-  async function fetchIPAddress(rawDomain: string) {
-    const url = normalizeDomain(rawDomain);
-    const name = typeof url === "string" ? url : url.hostname.replace(/\.$/, ""); // remove trailing dot
+  function fetchIPAddress(rawDomain: string) {
+    const name = normalizeDomain(rawDomain);
+
+    // console.log("Fetching IP for domain:", getDomainFromURL(rawDomain));
 
     if (!name) {
       setError("Please enter a domain.");
@@ -26,18 +27,18 @@ export default function FetchIPAddress() {
     setError(null);
     setIpAddress("");
 
-    try {
-      const resp = await fetch(
-        `https://cloudflare-dns.com/dns-query?name=${name}&type=A`,
-        { headers: { Accept: "application/dns-json" } }
-      );
-
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const data = await resp.json();
-
-      // data.Answer can be undefined on NXDOMAIN / NOERROR-NODATA
+    fetch(
+      `https://cloudflare-dns.com/dns-query?name=${name}&type=A`,
+       { headers: { Accept: "application/dns-json" } }
+    ).then((res) => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    })
+    .then((data) => {
       const answers = Array.isArray(data.Answer) ? data.Answer : [];
-      const aRecords = answers.filter((ans: any) => ans.type === 1 && typeof ans.data === "string");
+      const aRecords = answers.filter(
+        (ans: any) => ans.type === 1 && typeof ans.data === "string"
+      );
 
       if (aRecords.length === 0) {
         setError("No A records found for this domain.");
@@ -46,11 +47,11 @@ export default function FetchIPAddress() {
 
       // If you want just the first, keep the first; otherwise join.
       setIpAddress(aRecords.map((a: any) => a.data).join(", "));
-    } catch (e: any) {
-      setError(e?.message ?? "Failed to fetch DNS data.");
-    } finally {
-      setLoading(false);
-    }
+    })
+    .catch((err) => {
+      setError(err instanceof Error ? err.message : String(err));
+    })
+    .finally(() => setLoading(false));
   }
 
   return (

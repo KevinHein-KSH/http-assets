@@ -7,13 +7,12 @@ export default function UrlViewer() {
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState("");
 
-  async function handleParse(inputUrl: string) {
+  function handleParse(inputUrl: string) {
     setLoading(true);
     setError(null);
     setUrl(null);
 
-    try {
-      const parsedUrl = normalizeDomain(inputUrl);
+    const parsedUrl = normalizeDomain(inputUrl);
       if (parsedUrl instanceof URL) {
         setUrl(parsedUrl);
         setError(null);
@@ -21,12 +20,7 @@ export default function UrlViewer() {
         setUrl(null);
         setError("Invalid URL format");
       }
-    } catch (e) {
-      setUrl(null);
-      setError("Invalid URL");
-    } finally {
       setLoading(false);
-    }
   }
 
   return (
