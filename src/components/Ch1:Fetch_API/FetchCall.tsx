@@ -16,32 +16,24 @@ export default function FetchData() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function getUsers(url: string): Promise<ApiUser[]> {
-    const data = await fetch(url)
+  function getUsers(url: string): Promise<ApiUser[]> {
+    return fetch(url)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json() as Promise<ApiUser[]>;
       })
-      .then((data) => {
-        console.log("In the fetch:", data);
-        return data; // <— return it so the promise resolves to ApiUser[]
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        throw error; // rethrow if you want callers to handle it
-      });
-    return data;
   }
 
-  async function insertUrl() {
+  function insertUrl() {
     setLoading(true);
     setError(null);
     // will use dynamice URL later
     // will add error handling later chapter
-    const res = await getUsers("https://api.escuelajs.co/api/v1/users");
-    setUsers(res);
-    console.log("Fetched users in App:", res);
-    setLoading(false);
+    // will update with async/await later chapter
+    getUsers("https://api.escuelajs.co/api/v1/users")
+    .then(setUsers)
+    .catch(err => setError(err instanceof Error ? err.message : String(err)))
+    .finally(() => setLoading(false));
   }
 
   const message = users.length === 0 ? <p>Data haven't fetch yet!</p> : null;
