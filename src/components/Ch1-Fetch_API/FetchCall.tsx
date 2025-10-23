@@ -17,20 +17,24 @@ export default function FetchData() {
   const [error, setError] = useState<string | null>(null);
   
   async function getUsers(url: string): Promise<ApiUser[]> {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.json() as Promise<ApiUser[]>;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return (await res.json()) as Promise<ApiUser[]>;
   }
 
   async function insertUrl() {
     setLoading(true);
     setError(null);
     // will use dynamice URL later
-    // will add error handling later chapter
+    try {
     const res = await getUsers("https://api.escuelajs.co/api/v1/users");
     setUsers(res);
-    setLoading(false);
     console.log("Fetched users in App:", res);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setLoading(false);
+    }
   }
 
   const message = users.length === 0 ? <p>Data haven't fetch yet!</p> : null;
