@@ -15,7 +15,7 @@ export default function FetchIPAddress() {
 
   function fetchIPAddress(rawDomain: string) {
     const url = normalizeDomain(rawDomain);
-     const name =
+    const name =
       typeof url === "string" ? url : url.hostname.replace(/\.$/, ""); // remove trailing dot
 
     // console.log("Fetching IP for domain:", getDomainFromURL(rawDomain));
@@ -29,31 +29,31 @@ export default function FetchIPAddress() {
     setError(null);
     setIpAddress("");
 
-    fetch(
-      `https://cloudflare-dns.com/dns-query?name=${name}&type=A`,
-       { headers: { Accept: "application/dns-json" } }
-    ).then((res) => {
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return res.json();
+    fetch(`https://cloudflare-dns.com/dns-query?name=${name}&type=A`, {
+      headers: { Accept: "application/dns-json" },
     })
-    .then((data) => {
-      const answers = Array.isArray(data.Answer) ? data.Answer : [];
-      const aRecords = answers.filter(
-        (ans: any) => ans.type === 1 && typeof ans.data === "string"
-      );
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then((data) => {
+        const answers = Array.isArray(data.Answer) ? data.Answer : [];
+        const aRecords = answers.filter(
+          (ans: any) => ans.type === 1 && typeof ans.data === "string"
+        );
 
-      if (aRecords.length === 0) {
-        setError("No A records found for this domain.");
-        return;
-      }
+        if (aRecords.length === 0) {
+          setError("No A records found for this domain.");
+          return;
+        }
 
-      // If you want just the first, keep the first; otherwise join.
-      setIpAddress(aRecords.map((a: any) => a.data).join(", "));
-    })
-    .catch((err) => {
-      setError(err instanceof Error ? err.message : String(err));
-    })
-    .finally(() => setLoading(false));
+        // If you want just the first, keep the first; otherwise join.
+        setIpAddress(aRecords.map((a: any) => a.data).join(", "));
+      })
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : String(err));
+      })
+      .finally(() => setLoading(false));
   }
 
   return (

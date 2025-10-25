@@ -12,6 +12,25 @@ export type URLParts = {
   userinfo: string; // from user:password@domain
 };
 
+export interface ValidationPolicy {
+  allowedSchemes: ReadonlyArray<"http" | "https">;
+  requireTld: boolean;
+  allowSingleLabel: boolean;
+  allowLocalhost: boolean;
+  allowIP: boolean;
+  enforceDnsLabels: boolean;
+}
+
+// ---------- Default policies ----------
+export const DEFAULT_PUBLIC_POLICY: ValidationPolicy = {
+  allowedSchemes: ["http", "https"],
+  requireTld: true,
+  allowSingleLabel: false,
+  allowLocalhost: false,
+  allowIP: true, // flip to false if you want domains-only
+  enforceDnsLabels: true,
+};
+
 export function normalizeDomain(raw: string): URL | string {
     try {
       const trimmed = raw.trim();
@@ -23,4 +42,12 @@ export function normalizeDomain(raw: string): URL | string {
     } catch {
       return raw.trim();
     }
+}
+
+function validateURL(url: URL, policy: ValidationPolicy): boolean {
+  const scheme = url.protocol.replace(":", "") as "http" | "https" | string;
+  if (!policy.allowedSchemes.includes(scheme as "http" | "https")) {
+    return false;
+  }
+  return true; // Placeholder for actual validation logic
 }
