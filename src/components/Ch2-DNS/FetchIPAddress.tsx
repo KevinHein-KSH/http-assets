@@ -14,7 +14,9 @@ export default function FetchIPAddress() {
   // }
 
   function fetchIPAddress(rawDomain: string) {
-    const name = normalizeDomain(rawDomain);
+    const url = normalizeDomain(rawDomain);
+     const name =
+      typeof url === "string" ? url : url.hostname.replace(/\.$/, ""); // remove trailing dot
 
     // console.log("Fetching IP for domain:", getDomainFromURL(rawDomain));
 
