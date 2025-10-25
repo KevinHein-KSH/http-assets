@@ -16,15 +16,21 @@ export default function UrlViewer() {
 
     await delay(1000); // simulate loading
 
-    const parsedUrl = normalizeDomain(inputUrl);
-    if (parsedUrl instanceof URL) {
-      setUrl(parsedUrl);
-      setError(null);
-    } else {
+    try {
+      const parsedUrl = normalizeDomain(inputUrl);
+      if (parsedUrl instanceof URL) {
+        setUrl(parsedUrl);
+        setError(null);
+      } else {
+        setUrl(null);
+        setError("Invalid URL format");
+      }
+    } catch (err) {
       setUrl(null);
-      setError("Invalid URL format");
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (
