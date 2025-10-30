@@ -47,6 +47,7 @@ export default function UrlViewer() {
       <button
         onClick={() => {
           setUrl(null);
+          setInput("");
           setError(null);
         }}
         disabled={loading || !(url instanceof URL)}

@@ -74,8 +74,21 @@ export default function FetchIPAddress() {
         {loading ? "Loading..." : "IP Fetch"}
       </button>
 
+      <button
+        onClick={() => {
+          setIpAddress("");
+          setDomain("");
+          setError(null);
+        }}
+        disabled={
+          loading || (domain.trim() === "" && ipAddress === "" && !error)
+        }
+      >
+        Clear
+      </button>
+
       {error && <p role="alert">Error: {error}</p>}
-      {!error && !loading && !ipAddress && <p>No data fetched yet!</p>}
+      {!error && !loading && !ipAddress && <p>No IPs yet!</p>}
       {ipAddress && <p>IP Address: {ipAddress}</p>}
     </>
   );
