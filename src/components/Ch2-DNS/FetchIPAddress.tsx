@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { normalizeDomain } from "../../utils/urlUtil";
+import { getHostname } from "../../utils/urlUtil";
 
 export default function FetchIPAddress() {
   const [loading, setLoading] = useState(false);
@@ -14,10 +14,8 @@ export default function FetchIPAddress() {
   // }
 
   function fetchIPAddress(rawDomain: string) {
-    const url = normalizeDomain(rawDomain);
-    const name =
-      typeof url === "string" ? url : url.hostname.replace(/\.$/, ""); // remove trailing dot
-
+    const name = getHostname(rawDomain) ?? "";
+    
     // console.log("Fetching IP for domain:", getDomainFromURL(rawDomain));
 
     if (!name) {
