@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { normalizeDomain } from "../../utils/urlUtil";
+import { getUrl } from "../../utils/urlUtil";
 
 export default function UrlViewer() {
   const [url, setUrl] = useState<URL | string | null>(null);
@@ -16,7 +16,7 @@ export default function UrlViewer() {
 
     await delay(1000); // simulate loading
 
-    const parsedUrl = normalizeDomain(inputUrl);
+    const parsedUrl = getUrl(inputUrl);
     if (parsedUrl instanceof URL) {
       setUrl(parsedUrl);
       setError(null);
@@ -51,6 +51,7 @@ export default function UrlViewer() {
       <button
         onClick={() => {
           setUrl(null);
+          setInput("");
           setError(null);
         }}
         disabled={loading || !(url instanceof URL)}
