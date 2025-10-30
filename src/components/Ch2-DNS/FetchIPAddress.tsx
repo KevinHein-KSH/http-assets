@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { normalizeDomain } from "../../utils/urlUtil";
+import { getHostname } from "../../utils/urlUtil";
 
 export default function FetchIPAddress() {
   const [loading, setLoading] = useState(false);
@@ -14,9 +14,9 @@ export default function FetchIPAddress() {
   // }
 
   async function fetchIPAddress(rawDomain: string) {
-    const url = normalizeDomain(rawDomain);
-    const name =
-      typeof url === "string" ? url : url.hostname.replace(/\.$/, ""); // remove trailing dot
+    const name = getHostname(rawDomain) ?? "";
+    
+    // console.log("Fetching IP for domain:", getDomainFromURL(rawDomain));
 
     if (!name) {
       setError("Please enter a domain.");
@@ -75,8 +75,21 @@ export default function FetchIPAddress() {
         {loading ? "Loading..." : "IP Fetch"}
       </button>
 
+      <button
+        onClick={() => {
+          setIpAddress("");
+          setDomain("");
+          setError(null);
+        }}
+        disabled={
+          loading || (domain.trim() === "" && ipAddress === "" && !error)
+        }
+      >
+        Clear
+      </button>
+
       {error && <p role="alert">Error: {error}</p>}
-      {!error && !loading && !ipAddress && <p>No data fetched yet!</p>}
+      {!error && !loading && !ipAddress && <p>No IPs yet!</p>}
       {ipAddress && <p>IP Address: {ipAddress}</p>}
     </>
   );
