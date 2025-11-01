@@ -50,6 +50,13 @@ export default function HeaderApiKey() {
     <>
       <h2>Header API Key Example</h2>
       <p>API Key: {apiKeyState}</p>
+    <p>
+      <strong>Example domain:</strong>{" "}
+      <code>httpbin.org</code>
+      <span style={{ display: "block", color: "#666", fontSize: "0.9em", marginTop: 6 }}>
+        This endpoint echoes request headers. For this demo, only <code>httpbin.org</code> is supported.
+      </span>
+    </p>
       <input type="text" onChange={(e) => setDomainState(e.target.value)} />
       <button onClick={() => init(domainState)}>Fetch Item with API Key</button>
     </>
