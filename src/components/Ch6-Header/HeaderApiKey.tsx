@@ -19,15 +19,13 @@ export default function HeaderApiKey() {
   }
 
   async function getItemData(domain: string) {
-    if (!apiKeyState) {
-      const newKey = generateKey();
-      setapiKeyState(newKey);
-    }
+    let keyToUse = generateKey();
+      setapiKeyState(keyToUse);
     const response = await fetch(`https://${domain}/anything`, {
       method: "GET",
       mode: "cors",
       headers: {
-        "X-API-Key": apiKeyState,
+        "X-API-Key": keyToUse,
         "Content-Type": "application/json",
       },
     });
