@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Button, Paper, TextField, Alert, Typography, Stack } from "@mui/material";
 import { getUrl } from "../../utils/urlUtil";
 
 export default function UrlViewer() {
@@ -34,38 +35,42 @@ export default function UrlViewer() {
   }
 
   return (
-    <>
-      <h2>URL Parts Viewer</h2>
+    <Paper sx={{ p: 2, m: 3 }} className="space-y-2">
+      <Typography variant="h6">URL Parts Viewer</Typography>
 
       <p>Use this e.g url: http://dragonslayer:pwn3d@fantasyquest.com:8080/maps?sort=rank#id</p>
 
-      <input
-        type="text"
+      <TextField
+        placeholder="Enter a URL"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => {
-        if (e.key === 'Enter' && input.trim()) {
+          if (e.key === "Enter" && input.trim()) {
             e.preventDefault();
-          handleParse(input);
-            }}}
-        placeholder="Enter a URL"
-        style={{ width: "500px" }}
-      />
-      <button onClick={() => handleParse(input)} disabled={loading}>
-        {loading ? "Parsing..." : "Parse URL"}
-      </button>
-      <button
-        onClick={() => {
-          setUrl(null);
-          setInput("");
-          setError(null);
+            handleParse(input);
+          }
         }}
-        disabled={loading || !(url instanceof URL)}
-      >
-        Clear
-      </button>
+        size="small"
+        sx={{ width: 500, maxWidth: '100%' }}
+      />
+      <Stack direction="row" spacing={1} className="mt-1">
+        <Button variant="contained" onClick={() => handleParse(input)} disabled={loading}>
+          {loading ? "Parsing..." : "Parse URL"}
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={() => {
+            setUrl(null);
+            setInput("");
+            setError(null);
+          }}
+          disabled={loading || !(url instanceof URL)}
+        >
+          Clear
+        </Button>
+      </Stack>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <Alert severity="error">{error}</Alert>}
 
       {url && url instanceof URL && (
         <table className="kv">
@@ -139,10 +144,9 @@ export default function UrlViewer() {
           </tbody>
         </table>
       )}
-    </>
+    </Paper>
   );
 }
 
-
 // add mailto
-// remove # and ? in search and hash 
+// remove # and ? in search and hash
