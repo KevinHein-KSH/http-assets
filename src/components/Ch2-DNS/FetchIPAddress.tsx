@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Button, Paper, TextField, Alert, Typography, Stack } from "@mui/material";
 import { getHostname } from "../../utils/urlUtil";
 
 export default function FetchIPAddress() {
@@ -56,41 +57,57 @@ export default function FetchIPAddress() {
   }
 
   return (
-    <>
-      <h2>Fetch IP Address Example</h2>
+    <Paper sx={{ p: 2, m: 3 }} className="space-y-2">
+      <Typography variant="h6">Fetch IP Address Example</Typography>
 
-      <input
-        type="text"
+      <TextField
         placeholder="Enter domain name"
         value={domain}
         onChange={(e) => setDomain(e.target.value)}
         onKeyDown={(e) => {
-        if (e.key === 'Enter' && domain.trim()) {
+          if (e.key === "Enter" && domain.trim()) {
             e.preventDefault();
-          fetchIPAddress(domain);
-            }}}
+            fetchIPAddress(domain);
+          }
+        }}
+        size="small"
+        sx={{ maxWidth: 420 }}
       />
 
-      <button onClick={() => fetchIPAddress(domain)} disabled={loading || !domain.trim()}>
-        {loading ? "Loading..." : "IP Fetch"}
-      </button>
+      <Stack direction="row" spacing={1} className="mt-1">
+        <Button
+          variant="contained"
+          onClick={() => fetchIPAddress(domain)}
+          disabled={loading || !domain.trim()}
+        >
+          {loading ? "Loading..." : "IP Fetch"}
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={() => {
+            setIpAddress("");
+            setDomain("");
+            setError(null);
+          }}
+          disabled={
+            loading || (domain.trim() === "" && ipAddress === "" && !error)
+          }
+        >
+          Clear
+        </Button>
+      </Stack>
 
-      <button
-        onClick={() => {
-          setIpAddress("");
-          setDomain("");
-          setError(null);
-        }}
-        disabled={
-          loading || (domain.trim() === "" && ipAddress === "" && !error)
-        }
-      >
-        Clear
-      </button>
-
-      {error && <p role="alert">Error: {error}</p>}
-      {!error && !loading && !ipAddress && <p>No IPs yet!</p>}
-      {ipAddress && <p>IP Address: {ipAddress}</p>}
-    </>
+      {error && (
+        <Alert role="alert" severity="error">
+          Error: {error}
+        </Alert>
+      )}
+      {!error && !loading && !ipAddress && (
+        <Typography variant="body2" color="text.secondary">
+          No IPs yet!
+        </Typography>
+      )}
+      {ipAddress && <Typography>IP Address: {ipAddress}</Typography>}
+    </Paper>
   );
 }
