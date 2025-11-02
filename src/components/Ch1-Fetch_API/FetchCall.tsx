@@ -49,7 +49,7 @@ export default function FetchData() {
   };
 
   return (
-    <Paper sx={{ p: 2, m: 3 }} className="space-y-2">
+    <Paper elevation={3} sx={{ p: 2, m: 3 }} className="space-y-2">
       <Typography variant="h6">Fetch API Example</Typography>
       <Typography variant="body2" color="text.secondary">
         Check the console for fetched data.
