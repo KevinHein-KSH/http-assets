@@ -10,7 +10,7 @@ export default function App() {
             <FetchIPAddress />
             <UrlViewer />
             
-            <TemplateContainer />
+            {/* <TemplateContainer /> */}
         </>
     );
 }
