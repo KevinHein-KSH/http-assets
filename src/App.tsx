@@ -8,6 +8,8 @@ export default function App() {
             <FetchData />
             <FetchIPAddress />
             <UrlViewer />
+            
+            {/* <TemplateContainer /> */}
         </>
     );
 }
