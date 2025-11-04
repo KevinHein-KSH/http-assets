@@ -27,15 +27,11 @@ export default function FetchData() {
     setLoading(true);
     setError(null);
     // will use dynamice URL later
-    try {
+    // will add error handling later chapter
     const res = await getUsers("https://api.escuelajs.co/api/v1/users");
     setUsers(res);
+    setLoading(false);
     console.log("Fetched users in App:", res);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    } finally {
-      setLoading(false);
-    }
   }
 
   const message = users.length === 0 ? (

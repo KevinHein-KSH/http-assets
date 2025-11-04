@@ -28,32 +28,27 @@ export default function FetchIPAddress() {
     setError(null);
     setIpAddress("");
 
-    try {
-      const resp = await fetch(
-        `https://cloudflare-dns.com/dns-query?name=${name}&type=A`,
-        { headers: { Accept: "application/dns-json" } }
-      );
+    const resp = await fetch(
+      `https://cloudflare-dns.com/dns-query?name=${name}&type=A`,
+      { headers: { Accept: "application/dns-json" } }
+    );
 
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const data = await resp.json();
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
 
-      const answers = Array.isArray(data.Answer) ? data.Answer : [];
-      const aRecords = answers.filter(
-        (ans: any) => ans.type === 1 && typeof ans.data === "string"
-      );
+    const answers = Array.isArray(data.Answer) ? data.Answer : [];
+    const aRecords = answers.filter(
+      (ans: any) => ans.type === 1 && typeof ans.data === "string"
+    );
 
-      if (aRecords.length === 0) {
-        setError("No A records found for this domain.");
-        return;
-      }
-
-      // If you want just the first, keep the first; otherwise join.
-      setIpAddress(aRecords.map((a: any) => a.data).join(", "));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    } finally {
-      setLoading(false);
+    if (aRecords.length === 0) {
+      setError("No A records found for this domain.");
+      return;
     }
+
+    // If you want just the first, keep the first; otherwise join.
+    setIpAddress(aRecords.map((a: any) => a.data).join(", "));
+    setLoading(false);
   }
 
   return (
