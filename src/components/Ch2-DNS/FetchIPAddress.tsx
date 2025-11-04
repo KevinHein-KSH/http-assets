@@ -18,10 +18,10 @@ export default function FetchIPAddress() {
   }
 
   // this require the input to be a full URL if it has protocol
-  function getDomainFromURL(url: string) {
-    const u = new URL(url);
-    return u.hostname;
-  }
+  // function getDomainFromURL(url: string) {
+  //   const u = new URL(url);
+  //   return u.hostname;
+  // }
 
   function fetchIPAddress(rawDomain: string) {
     const name = normalizeDomain(rawDomain);
