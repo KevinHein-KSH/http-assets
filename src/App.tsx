@@ -6,11 +6,11 @@ import TemplateContainer from './components/Template/TemplateContainer';
 export default function App() {
     return (
         <>
-            {/* <FetchData />
+            <FetchData />
             <FetchIPAddress />
-            <UrlViewer /> */}
+            <UrlViewer />
             
-            <TemplateContainer />
+            {/* <TemplateContainer /> */}
         </>
     );
 }
