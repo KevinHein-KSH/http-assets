@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Button, Paper, Alert, Typography, Stack } from "@mui/material";
 
 export type ApiUser = {
   id: number;
@@ -43,39 +44,48 @@ export default function FetchData() {
   };
 
   return (
-    <>
-      <h2>Fetch API Example</h2>
-      <p>Check the console for fetched data.</p>
+    <Paper sx={{ p: 2, m: 3 }} className="space-y-2">
+      <Typography variant="h6">Fetch API Example</Typography>
+      <Typography variant="body2" color="text.secondary">
+        Check the console for fetched data.
+      </Typography>
 
-      <button
-        onClick={() => {
-          insertUrl();
-        }}
-        disabled={loading}
-      >
-        {loading ? "Loading..." : "Fetch Users"}
-      </button>
-      <button
-        onClick={() => {
-          setUsers([]);
-          setError(null);
-        }}
-        disabled={loading || users.length === 0}
-      >
-        Clear Users
-      </button>
+      <Stack direction="row" spacing={1} className="mt-1">
+        <Button
+          variant="contained"
+          onClick={() => {
+            insertUrl();
+          }}
+          disabled={loading}
+        >
+          {loading ? "Loading..." : "Fetch Users"}
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={() => {
+            setUsers([]);
+            setError(null);
+          }}
+          disabled={loading || users.length === 0}
+        >
+          Clear Users
+        </Button>
+      </Stack>
 
-      {/* error handling messages */}
-      {error && <p role="alert">Error: {error}</p>}
+      {error && (
+        <Alert severity="error" role="alert">
+          Error: {error}
+        </Alert>
+      )}
       {users.length === 0 && getMessage()}
 
-      <ul id="userList">
+      <ul id="userList" className="list-disc pl-5">
         {users.map((user) => (
           <li key={user.id}>
             {user.name} ({user.email}) - Role: {user.role}
           </li>
         ))}
       </ul>
-    </>
+    </Paper>
   );
 }

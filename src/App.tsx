@@ -6,6 +6,8 @@ export default function App() {
         <>
             <FetchData />
             <FetchIPAddress />
+            
+            {/* <TemplateContainer /> */}
         </>
     );
 }
