@@ -57,7 +57,7 @@ export default function FetchIPAddress() {
   }
 
   return (
-    <Paper sx={{ p: 2, m: 3 }} className="space-y-2">
+    <Paper elevation={3} sx={{ p: 2, m: 3 }} className="space-y-2">
       <Typography variant="h6">Fetch IP Address Example</Typography>
 
       <TextField
