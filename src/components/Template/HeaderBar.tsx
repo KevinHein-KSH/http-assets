@@ -1,4 +1,4 @@
-import { Layers, HomeIcon, Github } from "lucide-react";
+ import { Layers, HomeIcon, Github } from "lucide-react";
 import { Button } from "@mui/material";
 import { chapters } from "../../types/chapters";
 import { View } from "../../types/chapters";
