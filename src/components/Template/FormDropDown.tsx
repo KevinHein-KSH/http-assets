@@ -25,11 +25,8 @@ export default function FormDropDown({
     };
 
     return (
-        <FormControl sx={{ width: 240 }}>
-            <InputLabel id="chapters-label">Chapters &amp; Project</InputLabel>
+        <FormControl sx={{ width: 200 }} size="small">
             <Select
-                labelId="chapters-label"
-                label="Chapters & Project"
                 value={value}
                 onChange={handleChange}
                 displayEmpty
