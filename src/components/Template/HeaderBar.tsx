@@ -7,7 +7,7 @@ import FormDropDown from "./FormDropDown";
 
 export default function HeaderBar({ view, setView }: { view: View; setView: (v: View) => void }) {
   return (
-    <div className="sticky top-0 z-30 border-b bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+    <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-sm shadow-sm border-b border-gray-200"> 
       <div className="mx-auto max-w-7xl px-4 py-3 flex items-center gap-3">
         <div
           className="flex items-center gap-2 cursor-pointer select-none"
@@ -55,7 +55,7 @@ export default function HeaderBar({ view, setView }: { view: View; setView: (v: 
       </div>
       
       <div className="mx-auto max-w-7xl px-4 pb-3">
-        <div className="rounded-2xl bg-gradient-to-r from-primary via-purple-600/15 to-primary p-1 overflow-x-auto bg-gray-100">
+        <div className="rounded-full pt-1.5 pb-1.5 bg-gradient-to-r from-primary via-purple-700/50 to-primary p-1 overflow-x-auto bg-gray-100">
           <div className="flex items-center justify-around gap-1 min-w-max">
             {chapters
               .filter((c) => c.kind === "chapter")
@@ -66,10 +66,9 @@ export default function HeaderBar({ view, setView }: { view: View; setView: (v: 
                   size="small"
                   variant={view.type === "item" && view.id === c.id ? "contained" : "text"}
                   aria-current={view.type === "item" && view.id === c.id ? "page" : undefined}
-                  className={`whitespace-nowrap rounded-xl focus-visible:ring-2 focus-visible:ring-primary ${
+                  className={`whitespace-nowrap !px-4 !rounded-xl ${
                     view.type === "item" && view.id === c.id
-                      ? "bg-blue-600 text-blue-600-foreground hover:bg-blue-600/90"
-                      : "hover:bg-blue-600/10"
+                      ? "!bg-white/80 !text-gray-500 shadow-md" : "hover:bg-gray-10"
                   }`}
                 >
                   {c.label}
@@ -84,10 +83,9 @@ export default function HeaderBar({ view, setView }: { view: View; setView: (v: 
                   size="small"
                   variant={view.type === "item" && view.id === p.id ? "contained" : "text"}
                   aria-current={view.type === "item" && view.id === p.id ? "page" : undefined}
-                  className={`whitespace-nowrap rounded-xl focus-visible:ring-2 focus-visible:ring-primary ${
+                  className={`whitespace-nowrap !rounded-xl focus-visible:ring-2 focus-visible:ring-primary ${
                     view.type === "item" && view.id === p.id
-                      ? "bg-purple-600 text-white hover:bg-purple-600/90"
-                      : "hover:bg-purple-600/10"
+                      ? "!bg-white/80 !text-gray-500 shadow-md" : "hover:bg-gray-10"
                   }`}
                 >
                   {p.label}
