@@ -3,6 +3,7 @@ import FetchData from './components/Ch1-Fetch_API/FetchCall';
 import UrlViewer from './components/Ch3-URL/URLParts';
 import TemplateContainer from './components/Template/TemplateContainer';
 import HeaderApiKey from './components/Ch6-Header/HeaderApiKey';
+import Json from './components/Ch7-JSON/JsonDisplay';
 
 export default function App() {
     return (
@@ -11,6 +12,7 @@ export default function App() {
             <FetchIPAddress />
             <UrlViewer />
             <HeaderApiKey />
+            <Json />
             
             {/* <TemplateContainer /> */}
         </>
