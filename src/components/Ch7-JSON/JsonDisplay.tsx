@@ -10,7 +10,6 @@ export default function JsonDisplay() {
   const [inputParsedJson, setInputParsedJson] = useState<string>("");
   const [parsedJsonType, setParsedJsonType] = useState<string>("");
   const [parsedJsonData, setParsedJsonData] = useState<object>({});
-  const [toJsonData, setToJsonData] = useState<string>("");
 
   const [inputStringifiedJson, setInputStringifiedJson] =
     useState<object | unknown>();
@@ -18,31 +17,14 @@ export default function JsonDisplay() {
     useState<string>("");
   const [stringifiedJsonData, setStringifiedJsonData] =
     useState<string>("");
-  const [toStringData, setToStringData] = useState<string>("");
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Accepts either a JSON string or a JS value, and returns a object/array/etc
-function toJson(input: string | unknown): unknown {
-  if (typeof input === "string") {
-    return JSON.parse(input); // may throw → caller handles try/catch
-  }
-  return input;
-}
-
-// Accepts either an object/array/etc and returns a pretty JSON string
-function toString(input: string | unknown): string {
-  const value =
-    typeof input === "string" ? JSON.parse(input) : input;
-  return JSON.stringify(value, null, 2);
-}
-
-
-  function handleParseJson() {
+  function handleParseJson(input: string) {
     setLoading(true);
     try {
-      const parsedData = JSON.parse(inputParsedJson);
+      const parsedData = JSON.parse(input);
       setParsedJsonData(parsedData);
       setParsedJsonType(typeof parsedData);
       console.log(parsedJsonType);
@@ -57,7 +39,7 @@ function toString(input: string | unknown): string {
     }
   }
 
-  function handleStringifyJson() {
+  function handleStringifyJson(input: object | unknown) {
     setLoading(true);
     try {
       const stringifiedData = JSON.stringify(inputStringifiedJson, null, 2);
@@ -89,7 +71,7 @@ function toString(input: string | unknown): string {
                 <TextareaAutosize
                   minRows={5}
                   onChange={(e) => setInputParsedJson(e.target.value)}
-                  placeholder="Enter JSON string to parse"
+                  placeholder="Enter JSON data to parse"
                   className="w-[300px] border border-gray-300 focus:border-2 focus:border-blue-500 focus:outline-none rounded p-2"
                 />
               </div>
@@ -124,7 +106,7 @@ function toString(input: string | unknown): string {
                 />
               </div>
               <div className="flex justify-end">
-                <Button variant="contained" onClick={() => handleStringifyJson()}>Stringify JSON</Button>
+                <Button variant="contained" onClick={() => handleStringifyJson(inputStringifiedJson)}>Stringify JSON</Button>
               </div>
             </div>
             <div className="flex flex-col gap-2">
