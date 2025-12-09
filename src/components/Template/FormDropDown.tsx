@@ -48,7 +48,7 @@ export default function FormDropDown({
                     .filter((c) => c.kind === "chapter")
                     .map((c) => (
                         <MenuItem key={c.id} value={String(c.id)}>
-                            {c.label}
+                            {c.label} - {c.description}
                         </MenuItem>
                     ))}
 

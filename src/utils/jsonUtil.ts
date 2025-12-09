@@ -12,3 +12,19 @@ export function toString(input: string | unknown): string {
     typeof input === "string" ? JSON.parse(input) : input;
   return JSON.stringify(value, null, 2);
 }
+
+export function isValidJsonObject(input: string): boolean {
+  // 1. Must start/end with braces
+  if (!input.trim().startsWith("{") || !input.trim().endsWith("}")) {
+    return false;
+  }
+
+  try {
+    const parsed = JSON.parse(input);
+
+    // 2. Must be a real object (not a string)
+    return typeof parsed === "object" && parsed !== null && !Array.isArray(parsed);
+  } catch {
+    return false;
+  }
+}

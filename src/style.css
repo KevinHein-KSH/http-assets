@@ -94,3 +94,9 @@ table {
   right: .25rem;                    /* bump off the edge a bit */
   top: 0;
 }
+
+.markdown-body {
+  background-color: white !important;
+  color: black !important;
+}
+
