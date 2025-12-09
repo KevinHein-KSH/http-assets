@@ -35,7 +35,7 @@ export default function UrlViewer() {
   }
 
   return (
-    <Paper sx={{ p: 2, m: 3 }} className="space-y-2">
+    <Paper elevation={3} sx={{ p: 2, m: 3 }} className="space-y-2">
       <Typography variant="h6">URL Parts Viewer</Typography>
 
       <p>Use this e.g url: http://dragonslayer:pwn3d@fantasyquest.com:8080/maps?sort=rank#id</p>
