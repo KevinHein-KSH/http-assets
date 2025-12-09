@@ -5,7 +5,7 @@
 
 import { useState } from "react";
 import { isValidJsonObject } from "../../utils/jsonUtil";
-import { Paper, Typography, TextareaAutosize, Button } from "@mui/material";
+import { Tab, Tabs, Typography, TextareaAutosize, Button } from "@mui/material";
 
 export default function JsonDisplay() {
   const [inputParsedJson, setInputParsedJson] = useState<string>("");
@@ -18,6 +18,8 @@ export default function JsonDisplay() {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [value, setValue] = useState(0);
 
   function handleParseJson(input: string) {
     setLoading(true);
@@ -71,24 +73,35 @@ export default function JsonDisplay() {
     }
   }
 
+  function handleChange(event: React.SyntheticEvent, newValue: number) {
+    // Handle tab change if needed
+    setValue(newValue);
+  }
+
   return (
     <>
-      <div className="p-5">
-        <Typography variant="h6">Chapter 7: Working with JSON Data </Typography>
-
-        <div className="grid grid-cols-2 gap-2 pt-1.5">
-          <div className="grid gap-4 block max-w-m shadow-xl shadow-gray-400/50 inset-shadow-sm inset-shadow-gray-500/50 rounded-lg p-4">
+      <Typography variant="h6" className="pl-4">
+        Chapter 7: Working with JSON Data{" "}
+      </Typography>
+      <Tabs value={value} onChange={handleChange} centered>
+        <Tab label="Item One" />
+        <Tab label="Item Two" />
+        <Tab label="Item Three" />
+      </Tabs>
+      <div className="p-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-1.5">
+          <div className="grid gap-4 block shadow-xl shadow-gray-400/50 inset-shadow-sm inset-shadow-gray-500/50 rounded-lg p-4">
             <div className="flex justify-center">
               <h3 className="text-lg font-medium">Parsing JSON</h3>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <div>
                   <TextareaAutosize
                     minRows={5}
                     onChange={(e) => setInputParsedJson(e.target.value)}
                     placeholder="Enter JSON data to parse"
-                    className="w-[300px] border border-gray-300 focus:border-2 focus:border-blue-500 focus:outline-none rounded p-2"
+                    className="w-full max-w-[300px] border border-gray-300 focus:border-2 focus:border-blue-500 focus:outline-none rounded p-2"
                   />
                 </div>
                 <div className="flex justify-end">
@@ -110,18 +123,18 @@ export default function JsonDisplay() {
             </div>
           </div>
 
-          <div className="grid gap-4 block max-w-m shadow-xl shadow-gray-400/50 inset-shadow-sm inset-shadow-gray-500/50 rounded-lg p-4">
+          <div className="grid gap-4 block shadow-xl shadow-gray-400/50 inset-shadow-sm inset-shadow-gray-500/50 rounded-lg p-4">
             <div className="flex justify-center">
               <h3 className="text-lg font-medium">Stringifying JSON</h3>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex flex-col gap-2">
                 <div>
                   <TextareaAutosize
                     minRows={5}
                     onChange={(e) => setInputStringifiedJson(e.target.value)}
                     placeholder="Enter JSON data to stringify"
-                    className="w-[300px] border border-gray-300 focus:border-2 focus:border-blue-500 focus:outline-none rounded p-2"
+                    className="w-full max-w-[300px] border border-gray-300 focus:border-2 focus:border-blue-500 focus:outline-none rounded p-2"
                   />
                 </div>
                 <div className="flex justify-end">
