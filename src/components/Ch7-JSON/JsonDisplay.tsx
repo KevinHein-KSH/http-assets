@@ -90,11 +90,7 @@ export default function JsonDisplay() {
   }
 
   return (
-    <Paper elevation={3} sx={{ py: 2, m: 3 }}>
-      <Typography variant="h6" className="pl-4">
-        Chapter 7: Working with JSON Data
-      </Typography>
-
+    <>
       <Tabs value={value} onChange={handleChange} centered>
         <Tab icon={<HomeIcon />} iconPosition="start" label="Home" />
         <Tab icon={<TextSnippetIcon />} iconPosition="start" label="Note" />
@@ -174,6 +170,6 @@ export default function JsonDisplay() {
           <ReactMarkdown>{readme}</ReactMarkdown>
         </div>
       )}
-    </Paper>
+    </>
   );
 }

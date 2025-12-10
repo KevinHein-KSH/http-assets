@@ -22,31 +22,34 @@ export default function ItemView({ id }: { id: string }) {
       transition={{ duration: 0.18 }}
     >
       <Card className="mb-6 border-primary/20">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <Typography className="text-xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
-                {active.label}
-              </Typography>
-              {active.description && (
-                <Typography className="mt-1">{active.description}</Typography>
-              )}
-            </div>
+        <CardHeader className="!pb-0"
+          title={
+            <Typography className="text-xl bg-clip-text">
+              {active.label}
+            </Typography>
+          }
+          subheader={
+            active.description ? (
+              <Typography className="mt-1">{active.description}</Typography>
+            ) : undefined
+          }
+          action={
             <div className="flex items-center gap-2">
               {active.href && (
                 <Button
                   component="a"
-                  href="{active.href}"
+                  href={active.href}
                   target="_blank"
                   rel="noreferrer"
                   variant="contained"
                   size="small"
                   className="border-primary text-primary hover:bg-primary/10 focus-visible:ring-2 focus-visible:ring-primary"
                 >
-                  <Github className="mr-2 size-4" /> Repo
+                  <Github className="mr-2 size-4" /> Branch
                 </Button>
               )}
-              {active.externalUrl && (
+              {/* future live link button */}
+              {/* {active.externalUrl && (
                 <Button
                   component="a"
                   href={active.externalUrl}
@@ -61,15 +64,15 @@ export default function ItemView({ id }: { id: string }) {
                 >
                   Live
                 </Button>
-              )}
+              )} */}
             </div>
-          </div>
-        </CardHeader>
-        <CardContent>
+          }
+        />
+        <CardContent className="!p-0 !pb-6">
           <Suspense
             fallback={<div className="p-6 text-sm opacity-70">Loading…</div>}
           >
-            <div className="p-2">{componentRegistry[id]}</div>
+            <div>{componentRegistry[id]}</div>
           </Suspense>
         </CardContent>
       </Card>

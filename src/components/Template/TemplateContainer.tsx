@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import HeaderBar from "./HeaderBar";
 import HomeView from "./HomeView";
-import ItemView from "./ItemVIew";
+import ItemView from "./ItemView";
 import { chapters } from "../../types/chapters";
 
 import { capstoneId, firstChapterId, View } from "../../types/chapters";

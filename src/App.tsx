@@ -9,13 +9,13 @@ import "github-markdown-css/github-markdown.css";
 export default function App() {
     return (
         <>
-            <FetchData />
+            {/* <FetchData />
             <FetchIPAddress />
             <UrlViewer />
             <HeaderApiKey />
-            <Json />
+            <Json /> */}
             
-            {/* <TemplateContainer /> */}
+            <TemplateContainer />
         </>
     );
 }
