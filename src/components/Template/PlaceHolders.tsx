@@ -1,4 +1,4 @@
-import JSON from "../Ch7-JSON/JsonDisplay"
+import JsonDisplay from "../Ch7-JSON/JsonDisplay"
 
 const Placeholder = ({ title }: { title: string }) => (
   <div className="prose prose-sm dark:prose-invert max-w-none">
@@ -23,7 +23,7 @@ export const componentRegistry: ComponentRegistry = {
   "ch-04": <Placeholder title="Chapter 4: Forms" />,
   "ch-05": <Placeholder title="Chapter 5: Effects" />,
   "ch-06": <Placeholder title="Chapter 6: Context" />,
-  "ch-07": <JSON />,
+  "ch-07": <JsonDisplay />,
   "ch-08": <Placeholder title="Chapter 8: Routing" />,
   "ch-09": <Placeholder title="Chapter 9: Data Fetching" />,
   "ch-10": <Placeholder title="Chapter 10: Testing" />,

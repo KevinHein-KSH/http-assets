@@ -1,18 +1,9 @@
 import { motion } from "framer-motion";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  Button,
-  Typography,
-} from "@mui/material";
 import { chapters } from "../../types/chapters";
 import { componentRegistry } from "./PlaceHolders";
-import { Github } from "lucide-react";
 import { Suspense } from "react";
 
 export default function ItemView({ id }: { id: string }) {
-  const active = chapters.find((c) => c.id === id)!;
   return (
     <motion.div
       key={id}
@@ -21,61 +12,11 @@ export default function ItemView({ id }: { id: string }) {
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.18 }}
     >
-      <Card className="mb-6 border-primary/20 !bg-white/70 backdrop-blur-sm">
-        <CardHeader className="!pb-0"
-          title={
-            <Typography className="text-xl bg-clip-text">
-              {active.label}
-            </Typography>
-          }
-          subheader={
-            active.description ? (
-              <Typography className="mt-1">{active.description}</Typography>
-            ) : undefined
-          }
-          action={
-            <div className="flex items-center gap-2">
-              {active.href && (
-                <Button
-                  component="a"
-                  href={active.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  variant="contained"
-                  size="small"
-                  className="border-primary text-primary hover:bg-primary/10 focus-visible:ring-2 focus-visible:ring-primary"
-                >
-                  <Github className="mr-2 size-4" /> Branch
-                </Button>
-              )}
-              {/* future live link button */}
-              {/* {active.externalUrl && (
-                <Button
-                  component="a"
-                  href={active.externalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  size="small"
-                  variant="contained"
-                  sx={{
-                    bgcolor: "purple.600",
-                    "&:hover": { bgcolor: "purple.600", opacity: 0.9 },
-                  }}
-                >
-                  Live
-                </Button>
-              )} */}
-            </div>
-          }
-        />
-        <CardContent className="!p-0 !pb-6">
-          <Suspense
-            fallback={<div className="p-6 text-sm opacity-70">Loading…</div>}
-          >
-            <div>{componentRegistry[id]}</div>
-          </Suspense>
-        </CardContent>
-      </Card>
+      <div className="w-full">
+        <Suspense fallback={<div className="text-sm opacity-70">Loading…</div>}>
+          <div className="w-full overflow-x-auto">{componentRegistry[id]}</div>
+        </Suspense>
+      </div>
     </motion.div>
   );
 }

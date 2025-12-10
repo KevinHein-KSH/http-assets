@@ -12,8 +12,6 @@ import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 import {
   Tab,
   Tabs,
-  Paper,
-  Typography,
   TextareaAutosize,
   Button,
 } from "@mui/material";
@@ -63,11 +61,10 @@ export default function JsonDisplay() {
     setLoading(true);
     try {
       if (isValidJsonObject(input)) {
-        const stringifiedData = JSON.stringify(input, null, 2);
+        const prasedData = JSON.parse(input);
+        const stringifiedData = JSON.stringify(prasedData, null, 2);
         setStringifiedJsonData(stringifiedData);
-        console.log("state var: ", stringifiedJsonData);
         setStringifiedJsonType(typeof stringifiedData);
-        console.log("JS var: ", stringifiedData);
 
         setError(null);
       } else {
@@ -91,13 +88,15 @@ export default function JsonDisplay() {
 
   return (
     <>
-      <Tabs value={value} onChange={handleChange} centered>
+      <Tabs value={value} onChange={handleChange} centered className="pb-6">
         <Tab icon={<HomeIcon />} iconPosition="start" label="Home" />
         <Tab icon={<TextSnippetIcon />} iconPosition="start" label="Note" />
       </Tabs>
 
       {value === 0 && (
         <div className="p-4">
+          {loading && <div className="text-blue-600 mb-2">Loading...</div>}
+          {error && <div className="text-red-500">Error: {error}</div>}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-1.5">
             <div className="grid gap-4 block shadow-xl shadow-gray-400/50 inset-shadow-sm inset-shadow-gray-500/50 rounded-lg p-4">
               <div className="flex justify-center">

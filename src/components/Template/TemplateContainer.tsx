@@ -1,18 +1,28 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import HeaderBar from "./HeaderBar";
 import HomeView from "./HomeView";
 import ItemView from "./ItemView";
+import ItemViewHeader from "./ItemViewHeader";
 import { chapters } from "../../types/chapters";
 
 import { capstoneId, firstChapterId, View } from "../../types/chapters";
 
 export default function TemplateContainer() {
   const [view, setView] = useState<View>({ type: "home" });
+  const activeChapter =
+    view.type === "item"
+      ? chapters.find((c) => c.id === view.id)
+      : undefined;
   return (
-    <div className="bg-gray-100 min-h-screen flex flex-col justify-between">
+    <div className="bg-gray-100 min-h-screen flex flex-col">
       <HeaderBar view={view} setView={setView} />
-      <div className="mx-auto max-w-7xl px-4 py-6 ">
+      <div className="mx-auto max-w-7xl px-4 py-6 flex-1 w-full">
+        {view.type === "item" && activeChapter && (
+          <div className="mb-4">
+            <ItemViewHeader chapter={activeChapter} />
+          </div>
+        )}
         <AnimatePresence mode="wait">
           {view.type === "home" ? (
             <HomeView
