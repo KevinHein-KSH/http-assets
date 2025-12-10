@@ -21,7 +21,7 @@ export default function ItemView({ id }: { id: string }) {
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.18 }}
     >
-      <Card className="mb-6 border-primary/20">
+      <Card className="mb-6 border-primary/20 !bg-white/70 backdrop-blur-sm">
         <CardHeader className="!pb-0"
           title={
             <Typography className="text-xl bg-clip-text">

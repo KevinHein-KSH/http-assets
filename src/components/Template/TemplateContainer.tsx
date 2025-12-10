@@ -10,7 +10,7 @@ import { capstoneId, firstChapterId, View } from "../../types/chapters";
 export default function TemplateContainer() {
   const [view, setView] = useState<View>({ type: "home" });
   return (
-    <div className="bg-gradient-to-r from-primary via-purple-700/50 to-primary bg-gray-100 min-h-screen flex flex-col justify-between">
+    <div className="bg-gray-100 min-h-screen flex flex-col justify-between">
       <HeaderBar view={view} setView={setView} />
       <div className="mx-auto max-w-7xl px-4 py-6 ">
         <AnimatePresence mode="wait">
