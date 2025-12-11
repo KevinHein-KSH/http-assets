@@ -7,7 +7,8 @@ export function toJson(input: string | unknown): unknown {
 }
 
 // Accepts either an object/array/etc and returns a pretty JSON string
-export function toString(input: string | unknown): string {
+// Throws if input is an invalid JSON string
+export function toJsonString(input: string | unknown): string {
   const value =
     typeof input === "string" ? JSON.parse(input) : input;
   return JSON.stringify(value, null, 2);
