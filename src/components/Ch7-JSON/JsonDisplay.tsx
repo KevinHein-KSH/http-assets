@@ -9,12 +9,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import readme from "./Readme.md?raw";
 import { isValidJsonObject } from "../../utils/jsonUtil";
 import TextSnippetIcon from "@mui/icons-material/TextSnippet";
-import {
-  Tab,
-  Tabs,
-  TextareaAutosize,
-  Button,
-} from "@mui/material";
+import { Tab, Tabs, TextareaAutosize, Button } from "@mui/material";
 
 export default function JsonDisplay() {
   const [inputParsedJson, setInputParsedJson] = useState<string>("");
@@ -45,7 +40,6 @@ export default function JsonDisplay() {
       }
       setParsedJsonData(parsedData);
       setParsedJsonType(typeof parsedData);
-      console.log(parsedJsonType);
 
       setError(null);
     } catch (err) {
@@ -97,7 +91,7 @@ export default function JsonDisplay() {
         <div className="p-4">
           {loading && <div className="text-blue-600 mb-2">Loading...</div>}
           {error && <div className="text-red-500">Error: {error}</div>}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-1.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-1.5">
             <div className="grid gap-4 block shadow-xl shadow-gray-400/50 inset-shadow-sm inset-shadow-gray-500/50 rounded-lg p-4">
               <div className="flex justify-center">
                 <h3 className="text-lg font-medium">Parsing JSON</h3>
@@ -115,6 +109,7 @@ export default function JsonDisplay() {
                   <div className="flex justify-end">
                     <Button
                       variant="contained"
+                      className="btn"
                       onClick={() => handleParseJson(inputParsedJson)}
                     >
                       Parse JSON
@@ -148,6 +143,7 @@ export default function JsonDisplay() {
                   <div className="flex justify-end">
                     <Button
                       variant="contained"
+                      className="btn"
                       onClick={() => handleStringifyJson(inputStringifiedJson)}
                     >
                       Stringify JSON

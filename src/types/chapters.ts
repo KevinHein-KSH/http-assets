@@ -1,6 +1,6 @@
 type ChapterKind = "chapter" | "project";
 
-interface Chapter {
+export interface Chapter {
   id: string;
   label: string;
   kind: ChapterKind;
@@ -19,6 +19,7 @@ export const chapters: Chapter[] = [
   {
     id: "ch-07",
     label: "Chapter 7",
+    
     kind: "chapter",
     description: "JSON",
     href: "https://github.com/KevinHein-KSH/http-assets/tree/Ch-7-JSON",

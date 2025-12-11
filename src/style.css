@@ -40,15 +40,18 @@ body {
 }
 
 .btn {
-  background-color: #4d0d7e;
-  color: white;
-  border: none;
-  padding: 10px 16px;
+  color:  hsl(var(--primary)) !important;
   border-radius: 8px;
+  padding: 10px 16px;
   cursor: pointer;
   font-size: 14px;
+  border: none;
 }
-.btn:hover { background-color: #5e0ea1; }
+.btn:hover {
+  color: white !important;
+  background-color: hsl(var(--primary) / 0.6);
+}
+
 .btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .btn--secondary {

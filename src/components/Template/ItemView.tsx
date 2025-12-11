@@ -14,7 +14,9 @@ export default function ItemView({ id }: { id: string }) {
     >
       <div className="w-full">
         <Suspense fallback={<div className="text-sm opacity-70">Loading…</div>}>
-          <div className="w-full overflow-x-auto">{componentRegistry[id]}</div>
+          <div className="w-full overflow-x-auto">
+            {componentRegistry[id] ?? <div>Content not found for this chapter.</div>}
+          </div>
         </Suspense>
       </div>
     </motion.div>

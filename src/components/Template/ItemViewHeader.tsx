@@ -1,13 +1,10 @@
 import { Button } from "@mui/material";
 import { Github } from "lucide-react";
+import { Chapter } from "../../types/chapters";
+import { BorderColor } from "@mui/icons-material";
 
 type ItemHeaderProps = {
-  chapter: {
-    label: string;
-    description?: string;
-    href?: string;
-    externalUrl?: string;
-  };
+  chapter: Chapter;
 };
 
 export default function ItemViewHeader({ chapter }: ItemHeaderProps) {
@@ -33,10 +30,19 @@ export default function ItemViewHeader({ chapter }: ItemHeaderProps) {
             component="a"
             href={chapter.href}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             variant="contained"
             size="small"
-            className="border-primary text-primary hover:bg-primary/10 focus-visible:ring-2 focus-visible:ring-primary"
+            sx={{
+              borderColor: "primary.main",
+              color: "primary.main",
+              "&:hover": { bgcolor: "primary.main", color: "primary.contrastText", opacity: 0.6 },
+              "&:focus-visible": {
+                outline: "2px solid",
+                outlineColor: "primary.main",
+                outlineOffset: "2px",
+              },
+            }}
           >
             <Github className="mr-2 size-4" /> Branch
           </Button>
