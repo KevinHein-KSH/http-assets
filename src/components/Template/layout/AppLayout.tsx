@@ -18,7 +18,7 @@ export default function AppLayoutProps({
 }: AppLayoutProps) {
   return (
     <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-sm shadow-sm border-b border-gray-200">
-      <div>
+      <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-sm shadow-sm border-b border-gray-200">
         <div className="mx-auto max-w-7xl px-4 py-3 flex items-center gap-3">
           <div
             className="flex items-center gap-2 cursor-pointer select-none"
@@ -77,5 +77,3 @@ export default function AppLayoutProps({
     </div>
   );
 }
-// need design div adjusting for navbar and footer, will cause error
-//"sticky top-0 z-30 bg-white/80 backdrop-blur-sm shadow-sm border-b border-gray-200"
