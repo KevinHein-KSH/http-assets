@@ -1,10 +1,12 @@
-import JsonDisplay from "../Ch7-JSON/JsonDisplay"
+import JsonDisplay from "../Ch7-JSON/JsonDisplay";
+import HeaderApiKey from "../Ch6-Header/HeaderApiKey";
 
 const Placeholder = ({ title }: { title: string }) => (
   <div className="prose prose-sm dark:prose-invert max-w-none">
     <h2 className="mb-2">{title}</h2>
     <p className="opacity-80">
-      Replace this with your real component by editing <code>componentRegistry</code>.
+      Replace this with your real component by editing{" "}
+      <code>componentRegistry</code>.
     </p>
     <ul className="list-disc ml-5">
       <li>Keep each chapter focused (one concept per component).</li>
@@ -22,7 +24,7 @@ export const componentRegistry: ComponentRegistry = {
   "ch-03": <Placeholder title="Chapter 3: Lists & Keys" />,
   "ch-04": <Placeholder title="Chapter 4: Forms" />,
   "ch-05": <Placeholder title="Chapter 5: Effects" />,
-  "ch-06": <Placeholder title="Chapter 6: Context" />,
+  "ch-06": <HeaderApiKey />,
   "ch-07": <JsonDisplay />,
   "ch-08": <Placeholder title="Chapter 8: Routing" />,
   "ch-09": <Placeholder title="Chapter 9: Data Fetching" />,
