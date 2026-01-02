@@ -83,7 +83,7 @@ export default function FetchData() {
       )}
       {users.length === 0 && getMessage()}
 
-      <div className="grid grid-cols-3 gap-4">
+      {users.length > 0 && (<div className="mt-4 grid grid-cols-3 gap-2">
         <div className="font-semibold">User Name</div>
         <div className="font-semibold">Email</div>
         <div className="font-semibold">Role</div>
@@ -97,7 +97,7 @@ export default function FetchData() {
             </div>
           </>
         ))}
-      </div>
+      </div>)}
     </Paper>
   );
 }

@@ -10,7 +10,14 @@ export interface Chapter {
 }
 
 export const chapters: Chapter[] = [
-  { id: "ch-01", label: "Chapter 1", kind: "chapter", description: "Fetch" },
+  {
+    id: "ch-01",
+    label: "Chapter 1",
+    kind: "chapter",
+    description: "Fetch",
+    href: "https://github.com/KevinHein-KSH/http-assets/tree/Ch-1-Fetch-API",
+    externalUrl: "https://your-live-demo-url.example.com",
+  },
   { id: "ch-02", label: "Chapter 2", kind: "chapter", description: "DNS" },
   { id: "ch-03", label: "Chapter 3", kind: "chapter", description: "URL" },
   { id: "ch-04", label: "Chapter 4", kind: "chapter", description: "Async" },
@@ -19,7 +26,6 @@ export const chapters: Chapter[] = [
   {
     id: "ch-07",
     label: "Chapter 7",
-    
     kind: "chapter",
     description: "JSON",
     href: "https://github.com/KevinHein-KSH/http-assets/tree/Ch-7-JSON",
