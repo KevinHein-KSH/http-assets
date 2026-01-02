@@ -1,5 +1,4 @@
-import JsonDisplay from "../Ch7-JSON/JsonDisplay";
-import HeaderApiKey from "../Ch6-Header/HeaderApiKey";
+import FetchCall from "../Ch1-Fetch_API/FetchCall";
 
 const Placeholder = ({ title }: { title: string }) => (
   <div className="prose prose-sm dark:prose-invert max-w-none">
@@ -19,13 +18,13 @@ const Placeholder = ({ title }: { title: string }) => (
 type ComponentRegistry = Record<string, React.ReactNode>;
 
 export const componentRegistry: ComponentRegistry = {
-  "ch-01": <Placeholder title="Chapter 1: Basics" />,
+  "ch-01": <FetchCall />,
   "ch-02": <Placeholder title="Chapter 2: State & Props" />,
   "ch-03": <Placeholder title="Chapter 3: Lists & Keys" />,
   "ch-04": <Placeholder title="Chapter 4: Forms" />,
   "ch-05": <Placeholder title="Chapter 5: Effects" />,
-  "ch-06": <HeaderApiKey />,
-  "ch-07": <JsonDisplay />,
+  "ch-06": <Placeholder title="Chapter 6: Headers" />,
+  "ch-07": <Placeholder title="Chapter 7: JSON" />,
   "ch-08": <Placeholder title="Chapter 8: Routing" />,
   "ch-09": <Placeholder title="Chapter 9: Data Fetching" />,
   "ch-10": <Placeholder title="Chapter 10: Testing" />,
