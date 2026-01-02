@@ -7,8 +7,8 @@
 
 ## 📘 Overview  
 
-`http-assets` is a front-end workspace for building clean, reusable components and experimenting with modern tooling.
-It also incorporates ideas learned from the freeCodeCamp × Boot.dev HTTP course, with occasional networking-related exercises included.
+> `http-assets` is a front-end workspace for building clean, reusable components and experimenting with modern tooling.
+> It also incorporates ideas learned from the freeCodeCamp × Boot.dev HTTP course, with occasional networking-related exercises included.
 ---
 
 ## 📚 About the Project
