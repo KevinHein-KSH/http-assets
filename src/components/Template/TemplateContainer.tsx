@@ -1,19 +1,21 @@
-import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-import HeaderBar from "./HeaderBar";
-import HomeView from "./HomeView";
-import ItemView from "./ItemVIew";
+import HomeView from "./views/HomeView";
+import ChapterView from "./views/ChapterView";
+import { AnimatePresence } from "framer-motion";
 import { chapters } from "../../types/chapters";
+import AppLayout from "../Template/layout/AppLayout";
 
 import { capstoneId, firstChapterId, View } from "../../types/chapters";
 
 export default function TemplateContainer() {
   const [view, setView] = useState<View>({ type: "home" });
+  const activeChapter =
+    view.type === "item"
+      ? chapters.find((c) => c.id === view.id)
+      : undefined;
   return (
-    <div>
-      <HeaderBar view={view} setView={setView} />
-      <div className="mx-auto max-w-7xl px-4 py-6">
-        <AnimatePresence mode="wait">
+    <AppLayout view={view} setView={setView}>
+      <AnimatePresence mode="wait">
           {view.type === "home" ? (
             <HomeView
               key="home"
@@ -21,15 +23,9 @@ export default function TemplateContainer() {
               onOpenCapstone={() => setView({ type: "item", id: capstoneId })}
             />
           ) : (
-            <ItemView id={view.id} />
+            <ChapterView key={view.id} id={view.id} />
           )}
         </AnimatePresence>
-      </div>
-      <footer className="border-t py-6 text-center text-sm">
-        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary/10 text-primary font-medium">
-          Built with ❤ — Chapters & Capstone
-        </span>
-      </footer>
-    </div>
+    </AppLayout>
   );
 }

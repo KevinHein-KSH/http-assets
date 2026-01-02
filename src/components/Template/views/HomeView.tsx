@@ -6,7 +6,7 @@ import {
   Button,
   Typography,
 } from "@mui/material";
-import { appConfig } from "../../config/appConfig";
+import { appConfig } from "../../../config/appConfig";
 
 export default function HomeView({
   onStart,

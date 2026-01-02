@@ -1,13 +1,9 @@
-import FetchIPAddress from './components/Ch2-DNS/FetchIPAddress';
-import FetchData from './components/Ch1-Fetch_API/FetchCall';
+import TemplateContainer from './components/Template/TemplateContainer';
 
 export default function App() {
     return (
-        <>
-            <FetchData />
-            <FetchIPAddress />
-            
-            {/* <TemplateContainer /> */}
+        <>  
+            <TemplateContainer />
         </>
     );
 }
