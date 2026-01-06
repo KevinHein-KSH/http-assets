@@ -1,10 +1,11 @@
 import { useState } from "react";
+import TabView from "./ui/TabsView";
 import HomeView from "./views/HomeView";
+import ReactMarkdown from "react-markdown";
 import ChapterView from "./views/ChapterView";
 import { AnimatePresence } from "framer-motion";
 import { chapters } from "../../types/chapters";
 import AppLayout from "../Template/layout/AppLayout";
-import TabView from "./ui/TabsView";
 
 import { capstoneId, firstChapterId, View } from "../../types/chapters";
 
@@ -20,7 +21,16 @@ export default function TemplateContainer() {
     },
     {
       label: "Note",
-      content: null,
+      content:
+      activeChapter?.notePath ? (
+         <div className="markdown-body p-6 bg-white text-black rounded-lg">
+          <ReactMarkdown>{activeChapter.notePath}</ReactMarkdown>
+        </div>
+      ) : (
+        <div className="markdown-body p-6 bg-white text-black rounded-lg">
+          <div className="text-center font-bold">No notes available</div>
+        </div>
+      ),
     },
   ];
 
