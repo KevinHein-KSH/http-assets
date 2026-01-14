@@ -8,9 +8,9 @@ export interface TabItem {
 }
 
 interface TabViewProps {
-  tabs: TabItem[];
-  activeTab: number;
-  onTabChange: (index: number) => void;
+  tabs: TabItem[]; // choice of tabs to display between chapter view and note view
+  activeTab: number; // currently active tab index (above tab array)
+  onTabChange: (index: number) => void; // callback when tab is changed send to parent from child
 }
 
 export default function TabView({
@@ -19,7 +19,7 @@ export default function TabView({
   onTabChange,
 }: TabViewProps) {
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-    onTabChange(newValue);
+    onTabChange(newValue); // change active tab to parent
   };
 
   return (
