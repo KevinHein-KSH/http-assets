@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Button, Paper, TextField, Alert, Typography, Stack } from "@mui/material";
-import { getHostname } from "../../utils/urlUtil";
 
 export default function FetchIPAddress() {
   const [loading, setLoading] = useState(false);
@@ -8,15 +7,25 @@ export default function FetchIPAddress() {
   const [domain, setDomain] = useState("");
   const [ipAddress, setIpAddress] = useState<string>("");
 
+  function normalizeDomain(raw: string) {
+    const trimmed = raw.trim();
+      if (!trimmed) return "";
+      // Strip protocol and path if user pastes a full URL
+      const url = trimmed.includes("://")
+        ? new URL(trimmed)
+        : new URL("http://" + trimmed);
+      return url.hostname.replace(/\.$/, ""); // remove trailing dot
+  }
+
   // this require the input to be a full URL if it has protocol
   // function getDomainFromURL(url: string) {
   //   const u = new URL(url);
   //   return u.hostname;
   // }
 
-  async function fetchIPAddress(rawDomain: string) {
-    const name = getHostname(rawDomain) ?? "";
-    
+  function fetchIPAddress(rawDomain: string) {
+    const name = normalizeDomain(rawDomain);
+
     // console.log("Fetching IP for domain:", getDomainFromURL(rawDomain));
 
     if (!name) {
@@ -28,27 +37,32 @@ export default function FetchIPAddress() {
     setError(null);
     setIpAddress("");
 
-    const resp = await fetch(
+    fetch(
       `https://cloudflare-dns.com/dns-query?name=${name}&type=A`,
-      { headers: { Accept: "application/dns-json" } }
-    );
-
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    const data = await resp.json();
-
-    const answers = Array.isArray(data.Answer) ? data.Answer : [];
-    const aRecords = answers.filter(
-      (ans: any) => ans.type === 1 && typeof ans.data === "string"
-    );
+       { headers: { Accept: "application/dns-json" } }
+    ).then((res) => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    })
+    .then((data) => {
+      // console.log("DNS response data:", data);
+      const answers = Array.isArray(data.Answer) ? data.Answer : [];
+      const aRecords = answers.filter(
+        (ans: any) => ans.type === 1 && typeof ans.data === "string"
+      );
 
     if (aRecords.length === 0) {
       setError("No A records found for this domain.");
       return;
     }
 
-    // If you want just the first, keep the first; otherwise join.
-    setIpAddress(aRecords.map((a: any) => a.data).join(", "));
-    setLoading(false);
+      // If you want just the first, keep the first; otherwise join.
+      setIpAddress(aRecords.map((a: any) => a.data).join(", "));
+    })
+    .catch((err) => {
+      setError(err instanceof Error ? err.message : String(err));
+    })
+    .finally(() => setLoading(false));
   }
 
   return (
