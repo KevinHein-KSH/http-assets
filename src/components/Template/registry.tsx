@@ -1,6 +1,7 @@
 import FetchCall from "../Ch1-Fetch_API/FetchCall";
 import FetchIPAddress from "../Ch2-DNS/FetchIPAddress";
 import URLParts from "../Ch3-URL/URLParts";
+import AsyncDemo from "../Ch4-Async/AsyncDemo";
 
 const Placeholder = ({ title }: { title: string }) => (
   <div className="prose prose-sm dark:prose-invert max-w-none">
@@ -23,7 +24,7 @@ export const componentRegistry: ComponentRegistry = {
   "ch-01": <FetchCall />,
   "ch-02": <FetchIPAddress />,
   "ch-03": <URLParts />,
-  "ch-04": <Placeholder title="Chapter 4: Forms" />,
+  "ch-04": <AsyncDemo />,
   "ch-05": <Placeholder title="Chapter 5: Effects" />,
   "ch-06": <Placeholder title="Chapter 6: Headers" />,
   "ch-07": <Placeholder title="Chapter 7: JSON" />,
