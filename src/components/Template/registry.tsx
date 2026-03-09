@@ -1,7 +1,7 @@
 import FetchCall from "../Ch1-Fetch_API/FetchCall";
 import FetchIPAddress from "../Ch2-DNS/FetchIPAddress";
 import URLParts from "../Ch3-URL/URLParts";
-import AsyncDemo from "../Ch4-Async/AsyncDemo";
+import Ch3URLNote from "../Ch3-URL/Readme.md?raw";
 
 const Placeholder = ({ title }: { title: string }) => (
   <div className="prose prose-sm dark:prose-invert max-w-none">
@@ -18,19 +18,27 @@ const Placeholder = ({ title }: { title: string }) => (
   </div>
 );
 
-type ComponentRegistry = Record<string, React.ReactNode>;
+type ChapterContent = {
+  home: React.ReactNode;
+  note?: string;
+};
+
+type ComponentRegistry = Record<string, ChapterContent>;
 
 export const componentRegistry: ComponentRegistry = {
-  "ch-01": <FetchCall />,
-  "ch-02": <FetchIPAddress />,
-  "ch-03": <URLParts />,
-  "ch-04": <AsyncDemo />,
-  "ch-05": <Placeholder title="Chapter 5: Effects" />,
-  "ch-06": <Placeholder title="Chapter 6: Headers" />,
-  "ch-07": <Placeholder title="Chapter 7: JSON" />,
-  "ch-08": <Placeholder title="Chapter 8: Routing" />,
-  "ch-09": <Placeholder title="Chapter 9: Data Fetching" />,
-  "ch-10": <Placeholder title="Chapter 10: Testing" />,
-  "project-final": <Placeholder title="Capstone Project" />,
+  "ch-01": { home: <FetchCall /> },
+  "ch-02": { home: <FetchIPAddress /> },
+  "ch-03": { home: <URLParts />, note: Ch3URLNote },
+  "ch-04": { home: <Placeholder title="Chapter 4: Forms" /> },
+  "ch-05": { home: <Placeholder title="Chapter 5: Effects" /> },
+  "ch-06": { home: <Placeholder title="Chapter 6: Headers" /> },
+  "ch-07": { home: <Placeholder title="Chapter 7: JSON" /> },
+  "ch-08": { home: <Placeholder title="Chapter 8: Routing" /> },
+  "ch-09": { home: <Placeholder title="Chapter 9: Data Fetching" /> },
+  "ch-10": { home: <Placeholder title="Chapter 10: Testing" /> },
+  "project-final": { home: <Placeholder title="Capstone Project" /> },
 };
+
+export const getChapterContent = (id: string) => componentRegistry[id];
+
 export default Placeholder;
