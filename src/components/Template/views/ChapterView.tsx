@@ -91,7 +91,7 @@ export default function ChapterView({ id }: ChapterViewProps) {
       <div className="w-full">
         <Suspense fallback={<div>Loading...</div>}>
           <div className="w-full overflow-x-auto">
-            {componentRegistry[id] ?? (
+            {componentRegistry[id]?.home ?? (
               <div>Content not found for this chapter.</div>
             )}
           </div>
