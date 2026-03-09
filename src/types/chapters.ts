@@ -5,7 +5,6 @@ export interface Chapter {
   label: string;
   kind: ChapterKind;
   description?: string;
-  notePath?: string;
   href?: string;
   externalUrl?: string;
 }
@@ -32,7 +31,6 @@ export const chapters: Chapter[] = [
     label: "Chapter 3",
     kind: "chapter",
     description: "URL",
-    notePath: "../../components/Ch3-URL/Readme.md",
     href: "https://github.com/KevinHein-KSH/http-assets/tree/Ch-3-URL",
     externalUrl: "https://your-live-demo-url.example.com",
   },
