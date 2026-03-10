@@ -103,3 +103,35 @@ table {
   color: black !important;
 }
 
+/* Shared styling for branch-like buttons (matches Chapter branch button) */
+/* .branch-btn {
+  color: hsl(var(--primary)) !important;
+  border: 1px solid hsl(var(--primary)) !important;
+  background: transparent !important;
+  transition: background-color 120ms ease, color 120ms ease, opacity 120ms ease;
+}
+.branch-btn:hover {
+  background-color: hsl(var(--primary) / 0.6) !important;
+  color: var(--primary-foreground) !important;
+}
+.branch-btn:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+} */
+
+.branch-btn {
+  border-color: var(--mui-palette-primary-main);
+  color: #9644d4 !important;
+  transition: background-color 120ms ease, color 120ms ease, opacity 120ms ease;
+}
+
+.branch-btn:hover {
+  background-color: #9644d4 !important;
+  color: white !important;
+  opacity: 0.6;
+}
+
+.branch-btn:focus-visible {
+  outline: 2px solid var(--mui-palette-primary-main);
+  outline-offset: 2px;
+}

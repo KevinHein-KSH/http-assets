@@ -1,4 +1,11 @@
-import HeaderApiKey from "../Ch6-Header/HeaderApiKey";
+import FetchCall from "../Ch1-Fetch_API/FetchCall";
+import FetchIPAddress from "../Ch2-DNS/FetchIPAddress";
+import URLParts from "../Ch3-URL/URLParts";
+import Ch3URLNote from "../Ch3-URL/Readme.md?raw";
+import AsyncDemo from "../Ch4-Async/AsyncDemo";
+import Ch4Async from "../Ch4-Async/Readme.md?raw";
+import ErrorDemo from "../Ch5-Errors/ErrorDemo";
+import Ch5Errors from "../Ch5-Errors/Readme.md?raw";
 
 const Placeholder = ({ title }: { title: string }) => (
   <div className="prose prose-sm dark:prose-invert max-w-none">
@@ -15,19 +22,27 @@ const Placeholder = ({ title }: { title: string }) => (
   </div>
 );
 
-type ComponentRegistry = Record<string, React.ReactNode>;
+type ChapterContent = {
+  home: React.ReactNode;
+  note?: string;
+};
+
+type ComponentRegistry = Record<string, ChapterContent>;
 
 export const componentRegistry: ComponentRegistry = {
-  "ch-01": <Placeholder title="Chapter 1: Basics" />,
-  "ch-02": <Placeholder title="Chapter 2: State & Props" />,
-  "ch-03": <Placeholder title="Chapter 3: Lists & Keys" />,
-  "ch-04": <Placeholder title="Chapter 4: Forms" />,
-  "ch-05": <Placeholder title="Chapter 5: Effects" />,
-  "ch-06": <HeaderApiKey />,
-  "ch-07": <Placeholder title="Chapter 7: Context" />,
-  "ch-08": <Placeholder title="Chapter 8: Routing" />,
-  "ch-09": <Placeholder title="Chapter 9: Data Fetching" />,
-  "ch-10": <Placeholder title="Chapter 10: Testing" />,
-  "project-final": <Placeholder title="Capstone Project" />,
+  "ch-01": { home: <FetchCall /> },
+  "ch-02": { home: <FetchIPAddress /> },
+  "ch-03": { home: <URLParts />, note: Ch3URLNote },
+  "ch-04": { home: <AsyncDemo />, note: Ch4Async },
+  "ch-05": { home: <ErrorDemo />, note: Ch5Errors },
+  "ch-06": { home: <Placeholder title="Chapter 6: Headers" /> },
+  "ch-07": { home: <Placeholder title="Chapter 7: JSON" /> },
+  "ch-08": { home: <Placeholder title="Chapter 8: Routing" /> },
+  "ch-09": { home: <Placeholder title="Chapter 9: Data Fetching" /> },
+  "ch-10": { home: <Placeholder title="Chapter 10: Testing" /> },
+  "project-final": { home: <Placeholder title="Capstone Project" /> },
 };
+
+export const getChapterContent = (id: string) => componentRegistry[id];
+
 export default Placeholder;

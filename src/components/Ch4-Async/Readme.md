@@ -114,3 +114,93 @@ run();
 ```
 
 This example shows how Promises and `async/await` work together to handle asynchronous results cleanly.
+
+
+### JavaScript Sync vs Async Summary
+
+**Key concept:** difference = **blocking vs non-blocking**.
+
+---
+
+### 1. **Synchronous**
+
+* Runs **line by line**
+* Next line **waits until the previous finishes**
+* Execution order = **code order**
+
+```js
+const a = api1();
+const b = api2();
+```
+
+Flow: `api1 → finish → api2 → finish`
+
+---
+
+### 2. **Async (no `await`)**
+
+* Calls **start immediately**
+* Run **concurrently**
+* Program **does not wait**
+* Results return **when each promise resolves**
+
+```js
+const p1 = api1();
+const p2 = api2();
+```
+
+Fastest API finishes first.
+
+---
+
+### 3. **Promise chaining with `.then()` (same concept as async/await)**
+
+* Uses **promise chaining**
+* Each step runs **after the previous resolves**
+
+```js
+api1()
+  .then(a => api2())
+  .then(b => console.log(b))
+  .catch(err => console.error(err));
+```
+
+Flow: `api1 → finish → api2`
+
+---
+
+### 4. **`async/await` (clean syntax for `.then()`)**
+
+* `await` **pauses the current async function**
+* **Does not block the event loop**
+* Sequential if written sequentially
+
+```js
+const a = await api1();
+const b = await api2();
+```
+
+Flow: `api1 → finish → api2`
+
+---
+
+### 5. **`Promise.all`**
+
+* Promises **start concurrently**
+* Wait until **all finish**
+
+```js
+const [a,b] = await Promise.all([api1(), api2()]);
+```
+
+---
+
+### Mental Model
+
+| Pattern            | Start      | Waiting    |
+| ------------------ | ---------- | ---------- |
+| Sync               | one-by-one | blocks     |
+| Async (no await)   | together   | none       |
+| `.then()` chain    | sequential | waits each |
+| `await` sequential | sequential | waits each |
+| `Promise.all`      | together   | waits all  |

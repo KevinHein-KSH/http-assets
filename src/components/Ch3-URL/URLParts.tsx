@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Button, Paper, TextField, Alert, Typography, Stack } from "@mui/material";
 import { getUrl } from "../../utils/urlUtil";
+import { Alert, Button, Paper, Stack, TextField, Typography } from "@mui/material";
 
 export default function UrlViewer() {
   const [url, setUrl] = useState<URL | string | null>(null);
@@ -8,17 +8,12 @@ export default function UrlViewer() {
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState("");
 
-  const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
-
-  async function handleParse(inputUrl: string) {
+  function handleParse(inputUrl: string) {
     setLoading(true);
     setError(null);
     setUrl(null);
 
-    await delay(1000); // simulate loading
-
-    try {
-      const parsedUrl = getUrl(inputUrl);
+    const parsedUrl = getUrl(inputUrl);
       if (parsedUrl instanceof URL) {
         setUrl(parsedUrl);
         setError(null);
@@ -26,16 +21,11 @@ export default function UrlViewer() {
         setUrl(null);
         setError("Invalid URL format");
       }
-    } catch (err) {
-      setUrl(null);
-      setError(err instanceof Error ? err.message : String(err));
-    } finally {
       setLoading(false);
-    }
   }
 
   return (
-    <Paper elevation={3} sx={{ p: 2, m: 3 }} className="space-y-2">
+    <Paper sx={{ p: 2, m: 3 }} className="space-y-2">
       <Typography variant="h6">URL Parts Viewer</Typography>
 
       <p>Use this e.g url: http://dragonslayer:pwn3d@fantasyquest.com:8080/maps?sort=rank#id</p>
