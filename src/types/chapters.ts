@@ -1,5 +1,3 @@
-import JSONnote from "../components/Ch7-JSON/Readme.md?raw";
-
 type ChapterKind = "chapter" | "project";
 
 export interface Chapter {
@@ -8,7 +6,6 @@ export interface Chapter {
   kind: ChapterKind;
   description?: string;
   href?: string;
-  notePath?: string;
   externalUrl?: string;
 }
 
@@ -67,7 +64,6 @@ export const chapters: Chapter[] = [
     kind: "chapter",
     description: "JSON",
     href: "https://github.com/KevinHein-KSH/http-assets/tree/Ch-7-JSON",
-    notePath: JSONnote,
     externalUrl: "https://your-live-demo-url.example.com",
   },
   { id: "ch-08", label: "Chapter 8", kind: "chapter", description: "Routing" },
