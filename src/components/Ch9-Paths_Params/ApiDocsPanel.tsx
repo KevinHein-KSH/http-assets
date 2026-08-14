@@ -22,11 +22,19 @@ export default function ApiDocsPanel() {
   //
   //     Response envelope: { <resource>: [...], total, skip, limit }
   //
-  //  2. add the "break it on purpose" hint:
-  //     set sortBy to a key the resource does not support and the server
-  //     answers 400 - the request is well-formed, the SERVER just says no.
-  //     Show `error` here in red when that happens (reuse the existing idiom:
+  //  2. add the "break it on purpose" hint. NOTE dummyjson mostly does NOT
+  //     reject bad input - verified:
+  //       ?sortBy=nonsense            -> 200, unsorted data, no warning
+  //       ?sort=age (wrong name)      -> 200, silently ignored
+  //       /users/filter (no key/val)  -> 200, empty array
+  //       /users/99999                -> 404 {"message":"User with id ... not found"}
+  //     So use /users/99999 for the error demo - it is the only clean JSON error.
+  //     Show `error` in red when it fires (reuse the existing idiom:
   //     {error && <div className="text-red-500 mt-2">Error: {error}</div>})
+  //
+  //     The silent-ignore behaviour is the SHARPER lesson-4 point: a server
+  //     that ignores your param hands back plausible wrong data instead of
+  //     telling you. Call that out in the panel text.
   //
   //  3. worth writing in the Readme: the course's own API (api.boot.dev)
   //     now 404s on /locations and /items, and rejects sort=level and
