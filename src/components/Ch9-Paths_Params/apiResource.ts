@@ -1,6 +1,11 @@
-// useApi - raw fetch calls for Chapter 9
+// apiResource - raw fetch calls for Chapter 9's REST resources
 //
-// Same layering as Ch8: page -> hook -> useApi -> apiFetch.
+// NOT a hook, despite what Ch8's equivalent is called. No useState, no
+// useCallback, no React - just async functions, so rules-of-hooks don't
+// apply. Real hooks live in ./hooks/. Ch8 named this useApi.ts; Ch9 drops
+// the misleading `use` prefix.
+//
+// Same layering as Ch8: page -> hook -> apiResource -> apiFetch.
 // The difference: Ch8 glued its URLs together with strings here. Chapter 9
 // does NOT build URLs in this file at all - the URL arrives already composed
 // by buildUrl(). That separation is the lesson.

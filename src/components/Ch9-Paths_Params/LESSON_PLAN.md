@@ -190,7 +190,7 @@ Established across chapters 1–8. Match them; don't invent new ones.
 
 **Chapter isolation — the important one.**
 Chapters **never import from each other**. They import *downward* only, into `src/types/` and
-`src/utils/`. This is why `buildUrl` lives in `src/utils/apiUrlUtil.ts` and not inside a chapter
+`src/utils/`. This is why `buildUrl` lives in `src/utils/urlUtil.ts` and not inside a chapter
 folder, and why Ch9 must not reach into `Ch8-HTTP_Methods/`.
 
 **Adding a chapter is a 3-touch operation:**
@@ -198,7 +198,12 @@ folder, and why Ch9 must not reach into `Ch8-HTTP_Methods/`.
 2. an entry in `chapters[]` in `src/types/chapters.ts`
 3. an import + entry in `src/components/Template/registry.tsx` (optionally `Readme.md?raw` as `note`)
 
-**Layering** (copied from Ch8): page component → hook → `useApi.ts` → shared `apiFetch`.
+**Layering** (copied from Ch8): page component → hook → `apiResource.ts` → shared `apiFetch`.
+
+Ch8 calls that third layer `useApi.ts`, but **it is not a hook** — no `useState`, no
+`useCallback`, no React, so rules-of-hooks don't apply. Ch9 renames it `apiResource.ts` to stop
+the `use` prefix lying. `hooks/` holds only things that must run inside a component.
+Ch8's own file keeps its name — Ch8 stays untouched.
 
 **Naming / exports**
 - Folders `Ch<N>-<Topic>`, chapter ids zero-padded `"ch-09"`, branches `Ch-<N>-<Topic>`
@@ -228,8 +233,11 @@ catch (err) {
 | `generateKey()` | `src/utils/serviceUtil.ts` | the demo API key |
 | `getUrl(input, policy)` | `src/utils/urlUtil.ts` | parsing in `describeUrl` — returns `URL \| null` |
 
-> `src/utils/urlUtil.ts` **checks** URLs (Ch3 parse/validate, policy-driven).
-> `src/utils/apiUrlUtil.ts` **builds** them (Ch9). Different jobs — keep them separate.
+> **`src/utils/urlUtil.ts` holds both halves**, banner-separated:
+> **PART 1 CHECK** (Ch3) parses/validates untrusted input, returns `null` on failure;
+> **PART 2 BUILD** (Ch9) composes URLs from trusted parts and lets `new URL()` throw.
+> Utils are shared infrastructure, not chapter-scoped — one URL module, two clearly labelled jobs.
+> Only `describeUrl` crosses the line, reusing `getUrl` instead of writing a second parser.
 
 **No test framework exists.** `npm test` deliberately exits 1. The real gate is
 `npm run type-check`.
@@ -297,14 +305,14 @@ chapter. Do not move URL construction into the submit handler.
 
 | File | Role | Key TODO |
 |---|---|---|
-| `src/utils/apiUrlUtil.ts` | **the core** | `buildUrl`, `buildQueryString`, `describeUrl`, `Resource`, `SORT_KEYS`, `DUMMYJSON_BASE` |
+| `src/utils/urlUtil.ts` **PART 2** | **the core** | `buildUrl`, `buildQueryString`, `describeUrl`, `Resource`, `SORT_KEYS`, `DUMMYJSON_BASE` |
 | `PathsAndParams.tsx` | page, default export | state + derive `url` on render + compose panels |
 | `ResourcePicker.tsx` | panel ① | resource radios, sub-path options |
 | `QueryParamsForm.tsx` | panel ② | 6 param controls; `sortBy` options come from `SORT_KEYS[resource]` |
 | `UrlPreview.tsx` | panel ③ | render URL + `describeUrl` breakdown table |
 | `ApiDocsPanel.tsx` | panel ④ | static docs table + error display |
 | `ResultsTable.tsx` | panel ⑤ | dynamic columns, `total` vs `rows.length` |
-| `useApi.ts` | fetch layer | `fetchResource`, `extractRecords` |
+| `apiResource.ts` | fetch layer (not a hook) | `fetchResource`, `extractRecords` |
 | `hooks/usePathsParams.ts` | orchestration | state triad + `sendRequest` + `clear` |
 | `Readme.md` | Note tab | lesson notes (TODO) + Ch8 migration table (done) |
 
@@ -343,7 +351,7 @@ import Ch9Note from "../Ch9-Paths_Params/Readme.md?raw";
 "ch-09": { home: <PathsAndParams />, note: Ch9Note },
 ```
 
-Ch9-specific types (`Resource`, `QueryParams`) belong in `apiUrlUtil.ts`, **not** in
+Ch9-specific types (`Resource`, `QueryParams`) belong in `urlUtil.ts` PART 2, **not** in
 `chapters.ts` — that file is already overloaded with Ch8-only types.
 
 ---
@@ -392,12 +400,14 @@ this log records *why*, the sections record *what*. Newest at the bottom.
 |---|---|---|
 | 2026-08-14 | Chapter 9 is "Paths and Parameters", not "Data Fetching" | The `ch-09` stub in `chapters.ts` was mislabelled; checked against the course repo |
 | 2026-08-14 | Use dummyjson, not the course's `api.boot.dev` | boot.dev API degraded: `/locations` + `/items` 404, `sort=level`/`sort=quality` 400. Exercises can't be reproduced on it |
-| 2026-08-14 | `buildUrl` goes in `src/utils/apiUrlUtil.ts`, separate from `urlUtil.ts` | Chapters never import each other; and building URLs ≠ validating them |
+| 2026-08-14 | ~~`buildUrl` goes in a separate `src/utils/apiUrlUtil.ts`~~ **— reversed, see below** | Building URLs ≠ validating them |
 | 2026-08-14 | Ch8 left unchanged; overlap documented in `Readme.md` instead | Ch8 is finished and committed; no unrequested refactors |
 | 2026-08-14 | Cut `AbortController`, debounce, URL-state sync, persistence | Kevin: stay inside the lesson's own concepts |
 | 2026-08-14 | Scaffold only — TODOs, no implementations, no JSX | It's a learning exercise; Kevin writes the logic |
 | 2026-08-14 | Branch `Ch-9-Paths-Params` cut from `Ch-8-HTTP-Methods`, not `develop` | Repo convention is a chapter-to-chapter chain |
 | 2026-08-14 | **Corrected:** lesson-4 error demo uses `/users/99999` (404), not `sortBy=nonsense` | Verified `sortBy=nonsense` returns **200**, not 400 — dummyjson silently ignores unknown params. The earlier 400 claim was true of boot.dev's API, not dummyjson |
+| 2026-08-16 | **Reversed:** merged `apiUrlUtil.ts` into `urlUtil.ts` as PART 2; deleted the separate file | Kevin: `src/utils/` is shared infrastructure, so splitting a util per-chapter is the wrong axis. The parse-vs-build distinction is real but is now carried by banner comments inside one file. Nothing imported `apiUrlUtil` yet (references were all TODO comments), so the move was free |
+| 2026-08-16 | Renamed Ch9's `useApi.ts` → `apiResource.ts` | The `use` prefix claimed it was a hook; it has no React in it at all, and a rules-of-hooks linter would try to enforce hook rules on it. Same "name it for what it is" principle as the util merge above. **Ch8's copy keeps its name** — Ch8 stays untouched, so `Readme.md`'s migration table still correctly cites `useApi.ts:NN` for Ch8 call sites |
 
 <!-- TODO: add your own rows as you build. Especially the reversals —
      "tried X, it didn't work, went with Y" is the most valuable kind of entry

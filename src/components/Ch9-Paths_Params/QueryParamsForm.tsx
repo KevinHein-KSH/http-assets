@@ -14,7 +14,7 @@
 
 export default function QueryParamsForm() {
   // TODO (Lesson 3 + 5):
-  //  - sortBy : <Select>, options come from SORT_KEYS[resource] in apiUrlUtil.
+  //  - sortBy : <Select>, options come from SORT_KEYS[resource] in urlUtil.
   //             MUST repopulate when resource changes - that visibly proves
   //             "different resources support different params" (Lesson 2 + 4).
   //  - order  : <Select> asc | desc

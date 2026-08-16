@@ -6,7 +6,7 @@
 
 // TODO: imports
 //  - useState, useCallback from "react"
-//  - fetchResource, extractRecords from "../useApi"
+//  - fetchResource, extractRecords from "../apiResource"
 
 export function usePathsParams() {
   // TODO: state (same triad every chapter in this repo uses)

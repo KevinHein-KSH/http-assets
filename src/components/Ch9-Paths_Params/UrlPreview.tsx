@@ -21,7 +21,7 @@ export default function UrlPreview() {
   //  1. render the full URL string, monospace, wrapping on long values.
   //     Optionally colour origin / path / query differently so the three
   //     parts are visually separable at a glance.
-  //  2. call describeUrl(url) from ../../utils/apiUrlUtil to get
+  //  2. call describeUrl(url) from ../../utils/urlUtil to get
   //     { origin, segments, params } - remember it returns null on bad input,
   //     so handle the null branch.
   //  3. render a two-column table:

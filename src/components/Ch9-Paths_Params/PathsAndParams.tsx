@@ -19,7 +19,7 @@
 //  - useState from react
 //  - the 5 panel components from ./
 //  - usePathsParams from ./hooks/usePathsParams
-//  - buildUrl, DUMMYJSON_BASE, Resource from ../../utils/apiUrlUtil
+//  - buildUrl, DUMMYJSON_BASE, Resource from ../../utils/urlUtil
 //  - generateKey from ../../utils/serviceUtil
 
 export default function PathsAndParams() {
