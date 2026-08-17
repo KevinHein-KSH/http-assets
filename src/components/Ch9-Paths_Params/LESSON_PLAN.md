@@ -305,7 +305,7 @@ chapter. Do not move URL construction into the submit handler.
 
 | File | Role | Key TODO |
 |---|---|---|
-| `src/utils/urlUtil.ts` **PART 2** | **the core** | `buildUrl`, `buildQueryString`, `describeUrl`, `Resource`, `SORT_KEYS`, `DUMMYJSON_BASE` |
+| `src/utils/urlUtil.ts` **PART 2** | **the core** | ✅ `buildUrl` · ⏸ `buildQueryString` (parked, see §6.1) · ⬜ `describeUrl`, `Resource`, `SORT_KEYS`, `DUMMYJSON_BASE` |
 | `PathsAndParams.tsx` | page, default export | state + derive `url` on render + compose panels |
 | `ResourcePicker.tsx` | panel ① | resource radios, sub-path options |
 | `QueryParamsForm.tsx` | panel ② | 6 param controls; `sortBy` options come from `SORT_KEYS[resource]` |
@@ -331,6 +331,42 @@ Rules, in order:
 3. **Omit-empty:** drop any param that is `undefined`, `null` or `""`. This is what makes blank
    fields vanish from the URL.
 4. `URLSearchParams` encodes for you — `q=john doe` and `select=title,price` come out right free.
+
+**Implemented and verified** (12/12): both doc examples, sloppy slashes on base and segments,
+empty segments filtered, `skip: 0` surviving omit-empty, space and comma encoding, and a base
+carrying a `/v1` prefix with or without its trailing slash.
+
+The base-prefix case was the interesting one. `url.pathname = path` *replaces* the path, and
+`new URL(path, base)` silently drops `/v1` when the base has no trailing slash — relative-link
+resolution treats `/v1` as a file, not a directory. The fix is to normalise the base into
+directory form first, then append:
+
+```ts
+if (!url.pathname.endsWith("/")) url.pathname += "/";
+url.pathname += urlPath;
+```
+
+Same move as the segment cleaning — normalise everything to one shape, then join with no cases
+left to handle.
+
+### 6.1 `buildQueryString` is parked (commented out)
+
+Written and verified 8/8 — omit-empty, keeps `0`, encodes `" "` and `","`, returns `""` rather
+than a bare `"?"`. **Commented out rather than deleted, because nothing calls it:** `buildUrl`
+runs its own copy of the same omit-empty loop inline, so the rule currently lives in two places
+and only one of them is reachable.
+
+Decide once the UI exists:
+
+| Option | Effect |
+|---|---|
+| **A — wire into `buildUrl`** | `url.search = buildQueryString(params ?? {})`. The `url.search` setter strips a leading `?`, so this works as-is and collapses the duplicated rule to one copy. |
+| **B — call from `UrlPreview`** | Display the `?…` tail on its own, which is what Ch9 lessons 3 and 5 actually demonstrate. |
+| **C — delete** | If the UI needs neither. |
+
+> ⚠ **Numbering trap in `urlUtil.ts`:** the stubs say `Lesson 3 + 5` meaning **Chapter 9's**
+> lessons 3 and 5, while PART 1's header says `Ch3` meaning **Chapter 3**. Same numeral, two
+> different meanings in one file.
 
 ---
 
@@ -407,6 +443,8 @@ this log records *why*, the sections record *what*. Newest at the bottom.
 | 2026-08-14 | Branch `Ch-9-Paths-Params` cut from `Ch-8-HTTP-Methods`, not `develop` | Repo convention is a chapter-to-chapter chain |
 | 2026-08-14 | **Corrected:** lesson-4 error demo uses `/users/99999` (404), not `sortBy=nonsense` | Verified `sortBy=nonsense` returns **200**, not 400 — dummyjson silently ignores unknown params. The earlier 400 claim was true of boot.dev's API, not dummyjson |
 | 2026-08-16 | **Reversed:** merged `apiUrlUtil.ts` into `urlUtil.ts` as PART 2; deleted the separate file | Kevin: `src/utils/` is shared infrastructure, so splitting a util per-chapter is the wrong axis. The parse-vs-build distinction is real but is now carried by banner comments inside one file. Nothing imported `apiUrlUtil` yet (references were all TODO comments), so the move was free |
+| 2026-08-16 | `buildUrl` implemented, 12/12 verified | Normalise the base to directory form before appending, rather than branching on whether it has a trailing slash. Two earlier attempts failed: `url.pathname = path` discarded a `/v1` prefix, and an inverted guard (`!endsWith("/") && urlPath`) skipped the append entirely for a bare origin, whose pathname is already `"/"` |
+| 2026-08-16 | `buildQueryString` written (8/8) but **parked — commented out, not deleted** | Nothing calls it; `buildUrl` duplicates the omit-empty loop inline. Kept as a comment so the working code and the reasoning survive until the UI shows whether option A (wire into `buildUrl`) or B (query tail in `UrlPreview`) is wanted. Delete if neither. See §6.1 |
 | 2026-08-16 | Renamed Ch9's `useApi.ts` → `apiResource.ts` | The `use` prefix claimed it was a hook; it has no React in it at all, and a rules-of-hooks linter would try to enforce hook rules on it. Same "name it for what it is" principle as the util merge above. **Ch8's copy keeps its name** — Ch8 stays untouched, so `Readme.md`'s migration table still correctly cites `useApi.ts:NN` for Ch8 call sites |
 
 <!-- TODO: add your own rows as you build. Especially the reversals —
