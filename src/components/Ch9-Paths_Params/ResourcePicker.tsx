@@ -16,7 +16,7 @@
 export default function ResourcePicker() {
   // TODO (Lesson 1 + 2):
   //  - render one radio per resource: users | posts | products | comments
-  //    (drive this off the Resource union / SORT_KEYS keys in urlUtil,
+  //    (drive this off the Resource union / SORT_KEYS keys in apiResource,
   //     don't hardcode a second list that can drift)
   //  - render sub-path options: none | search | category/smartphones
   //    "category/smartphones" is deliberately TWO segments - it shows a path

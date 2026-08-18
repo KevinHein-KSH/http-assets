@@ -24,7 +24,9 @@ export default function UrlPreview() {
   //  2. call describeUrl(url) from ../../utils/urlUtil to get
   //     { origin, segments, params } - remember it returns null on bad input,
   //     so handle the null branch.
-  //  3. render a two-column table:
+  //  3. render a two-column table. This component is api-agnostic: it renders
+  //     whatever describeUrl returns, so do not hardcode any resource or param
+  //     names. The rows below are just one example of the shape:
   //       origin      | https://dummyjson.com
   //       segment 1   | products
   //       segment 2   | category        <- only when a sub-path is selected

@@ -244,8 +244,10 @@ export function getUrl(input: string, policy = DEFAULT_PUBLIC_POLICY) {
 // PART 2 - BUILD: compose request URLs from trusted parts (Chapter 9)
 // ==================================================================
 //
-// Return types are intentionally left off the stubs below so the empty bodies
-// still type-check. Add them back as you implement each one.
+// Deliberately vendor-neutral: nothing here knows about any particular API.
+// Which resources exist, what their sort keys are and what the base url is
+// are per-API facts, so they live with the chapter that talks to that API
+// (see Ch9-Paths_Params/apiResource.ts), not in this shared util.
 
 // ---------- types ----------
 
@@ -256,46 +258,21 @@ export function getUrl(input: string, policy = DEFAULT_PUBLIC_POLICY) {
 // TODO: the bag of params handed to buildUrl
 // export type QueryParams = Record<string, QueryValue>;
 
-// ---------- Lesson 2: REST resource contract ----------
+// ---------- build the url ----------
 
-// TODO: the base url for the demo API
-// export const DUMMYJSON_BASE = "https://dummyjson.com";
-
-// TODO: the resources this API exposes. A union type means a typo is a
-//       compile error instead of a 404 at runtime.
-// export type Resource = "users" | "posts" | "products" | "comments";
-
-// TODO: which sort keys each resource actually supports.
-//       Drives the sortBy dropdown in the UI, and proves the point that
-//       different resources support different params.
-//       Shape: { users: ["id","firstName",...], posts: [...], ... }
-//       Use `as const satisfies Record<Resource, readonly string[]>`
-// export const SORT_KEYS = {} as const;
-
-// ---------- Lesson 1 + 5: build the url ----------
-
-// Returns: string - the fully composed URL
+// buildUrl("https://api.example.com", ["products"], { sortBy: "price", limit: 5 })
+//   -> "https://api.example.com/products?sortBy=price&limit=5"
 //
-// buildUrl("https://dummyjson.com", ["products"], { sortBy: "price", limit: 5 })
-//   -> "https://dummyjson.com/products?sortBy=price&limit=5"
+// buildUrl("https://api.example.com", ["products", "category", "phones"], { limit: 1 })
+//   -> "https://api.example.com/products/category/phones?limit=1"
 //
-// buildUrl("https://dummyjson.com", ["products", "category", "smartphones"], { limit: 1 })
-//   -> "https://dummyjson.com/products/category/smartphones?limit=1"
-export function buildUrl(base: string, segments: string[], params?: object) {
-  // TODO (Lesson 1 + 5):
-  //  1. use `new URL()` + `URLSearchParams` - NO string concatenation,
-  //     no template literals. That restriction IS the exercise.
-  //  2. strip leading/trailing "/" from base and from every segment, then
-  //     join with a single "/" so a trailing slash can never produce "//".
-  //  3. skip any param whose value is undefined, null or "" (omit-empty).
-  //     This is what makes blank fields vanish from the URL in the UI.
-  //  4. let URLSearchParams do the encoding - `q=john doe` and
-  //     `select=title,price` then come out correct for free.
-  //  5. return url.toString()
-  //
-  //  NOTE: do NOT route the base through getUrl() above. That validates
-  //  untrusted input and returns null; here a bad base is a bug in your own
-  //  code, so let `new URL()` throw.
+// A base carrying a path works too:
+// buildUrl("https://api.example.com/v1", ["users"]) -> ".../v1/users"
+export function buildUrl(
+  base: string,
+  segments: string[],
+  params?: object,
+): string {
   try {
     const url = new URL(base);
     const cleanSegments = segments
@@ -365,31 +342,32 @@ export function buildUrl(base: string, segments: string[], params?: object) {
 //   return queryString ? `?${queryString}` : "";
 // }
 
-// ---------- Lesson 1: take the url back apart, for the UI preview ----------
+// ---------- take the url back apart, for the UI preview ----------
 
-// Returns: { origin, segments, params } | null
-export function describeUrl(href: string) {
-  // TODO (Lesson 1):
-  //  - parse with getUrl() from PART 1 above - it already returns URL | null
-  //    and handles bad input. Do NOT write a second parser. Same file now,
-  //    so no import needed.
-  //  - return null when getUrl returns null
-  //  - origin:   url.origin
-  //  - segments: url.pathname split on "/", empty strings filtered out
-  //  - params:   [...url.searchParams] mapped to { key, value }
-  //
-  //  Heads up 1: noUncheckedIndexedAccess makes segments[0] `string | undefined`.
-  //  Prefer for...of / .map over index access.
-  //
-  //  Heads up 2: getUrl defaults to DEFAULT_PUBLIC_POLICY, which rejects
-  //  localhost and raw IPs. Fine for dummyjson.com; if you ever preview a
-  //  localhost URL you'll need to pass a looser policy.
-  const url = getUrl(href);
+export type UrlDescription = {
+  origin: string;
+  segments: string[];
+  params: Array<{ key: string; value: string }>;
+};
+
+// The inverse of buildUrl: splits a composed URL into the pieces a preview
+// table renders. Reuses getUrl() from PART 1 rather than parsing again.
+//
+// `params` is a list of pairs, not an object, because duplicate keys are legal
+// in a query string (?tag=a&tag=b) and an object would silently drop one.
+//
+// `policy` defaults to the strict public policy, so localhost and raw IPs
+// return null. Pass a looser policy to describe those.
+export function describeUrl(
+  href: string,
+  policy = DEFAULT_PUBLIC_POLICY,
+): UrlDescription | null {
+  const url = getUrl(href, policy);
   if (!url) return null;
 
   const origin = url.origin;
   const urlPath = url.pathname;
-  const segments = urlPath.split("/").filter((s)=> s.length > 0);
+  const segments = urlPath.split("/").filter((s) => s.length > 0);
   const params = [...url.searchParams].map(([key, value]) => ({ key, value }));
 
   return { origin, segments, params };

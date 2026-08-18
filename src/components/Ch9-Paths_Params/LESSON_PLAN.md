@@ -233,6 +233,11 @@ catch (err) {
 | `generateKey()` | `src/utils/serviceUtil.ts` | the demo API key |
 | `getUrl(input, policy)` | `src/utils/urlUtil.ts` | parsing in `describeUrl` — returns `URL \| null` |
 
+> **PART 2 is vendor-neutral by design.** Nothing in `urlUtil.ts` knows about any particular API —
+> verified against escuelajs (Ch1), jsonplaceholder (Ch4/5), dummyjson (Ch8/9), GitHub and
+> Cloudflare DNS. Per-API facts (`DUMMYJSON_BASE`, `Resource`, `SORT_KEYS`) live in
+> `Ch9-Paths_Params/apiResource.ts`, matching how every other chapter declares its own endpoints.
+>
 > **`src/utils/urlUtil.ts` holds both halves**, banner-separated:
 > **PART 1 CHECK** (Ch3) parses/validates untrusted input, returns `null` on failure;
 > **PART 2 BUILD** (Ch9) composes URLs from trusted parts and lets `new URL()` throw.
@@ -305,14 +310,14 @@ chapter. Do not move URL construction into the submit handler.
 
 | File | Role | Key TODO |
 |---|---|---|
-| `src/utils/urlUtil.ts` **PART 2** | **the core** | ✅ `buildUrl` · ⏸ `buildQueryString` (parked, see §6.1) · ⬜ `describeUrl`, `Resource`, `SORT_KEYS`, `DUMMYJSON_BASE` |
+| `src/utils/urlUtil.ts` **PART 2** | **the core**, vendor-neutral | ✅ `buildUrl` · ✅ `describeUrl` · ⏸ `buildQueryString` (parked, §6.1) · ⬜ `QueryValue`, `QueryParams` |
 | `PathsAndParams.tsx` | page, default export | state + derive `url` on render + compose panels |
 | `ResourcePicker.tsx` | panel ① | resource radios, sub-path options |
 | `QueryParamsForm.tsx` | panel ② | 6 param controls; `sortBy` options come from `SORT_KEYS[resource]` |
 | `UrlPreview.tsx` | panel ③ | render URL + `describeUrl` breakdown table |
 | `ApiDocsPanel.tsx` | panel ④ | static docs table + error display |
 | `ResultsTable.tsx` | panel ⑤ | dynamic columns, `total` vs `rows.length` |
-| `apiResource.ts` | fetch layer (not a hook) | `fetchResource`, `extractRecords` |
+| `apiResource.ts` | fetch layer (not a hook) + **all dummyjson-specific facts** | `fetchResource`, `extractRecords`, ⬜ `DUMMYJSON_BASE`, `Resource`, `SORT_KEYS` |
 | `hooks/usePathsParams.ts` | orchestration | state triad + `sendRequest` + `clear` |
 | `Readme.md` | Note tab | lesson notes (TODO) + Ch8 migration table (done) |
 
@@ -387,8 +392,13 @@ import Ch9Note from "../Ch9-Paths_Params/Readme.md?raw";
 "ch-09": { home: <PathsAndParams />, note: Ch9Note },
 ```
 
-Ch9-specific types (`Resource`, `QueryParams`) belong in `urlUtil.ts` PART 2, **not** in
-`chapters.ts` — that file is already overloaded with Ch8-only types.
+Neither belongs in `chapters.ts` — that file is already overloaded with Ch8-only types. They split
+by *who they're about*:
+
+| Type | Home | Why |
+|---|---|---|
+| `QueryValue`, `QueryParams` | `urlUtil.ts` PART 2 | every query string has keys and values, whatever the API |
+| `Resource`, `SORT_KEYS`, `DUMMYJSON_BASE` | `Ch9-Paths_Params/apiResource.ts` | facts about one specific API |
 
 ---
 
@@ -445,6 +455,8 @@ this log records *why*, the sections record *what*. Newest at the bottom.
 | 2026-08-16 | **Reversed:** merged `apiUrlUtil.ts` into `urlUtil.ts` as PART 2; deleted the separate file | Kevin: `src/utils/` is shared infrastructure, so splitting a util per-chapter is the wrong axis. The parse-vs-build distinction is real but is now carried by banner comments inside one file. Nothing imported `apiUrlUtil` yet (references were all TODO comments), so the move was free |
 | 2026-08-16 | `buildUrl` implemented, 12/12 verified | Normalise the base to directory form before appending, rather than branching on whether it has a trailing slash. Two earlier attempts failed: `url.pathname = path` discarded a `/v1` prefix, and an inverted guard (`!endsWith("/") && urlPath`) skipped the append entirely for a bare origin, whose pathname is already `"/"` |
 | 2026-08-16 | `buildQueryString` written (8/8) but **parked — commented out, not deleted** | Nothing calls it; `buildUrl` duplicates the omit-empty loop inline. Kept as a comment so the working code and the reasoning survive until the UI shows whether option A (wire into `buildUrl`) or B (query tail in `UrlPreview`) is wanted. Delete if neither. See §6.1 |
+| 2026-08-18 | `describeUrl` implemented (8/8) and given a `policy` param | Round-trips against `buildUrl`. `params` is a list of pairs, not an object, because duplicate keys (`?tag=a&tag=b`) are legal and an object drops one. The param was added because `describeUrl` inherited PART 1's strict `DEFAULT_PUBLIC_POLICY` and returned `null` for `localhost` and raw IPs — so `buildUrl` could compose a URL `describeUrl` then refused to describe. **Rejected auto-detecting** and loosening silently: that collapses into "never reject anything" while looking like validation, the same silent-accommodation failure lesson 4 warns about |
+| 2026-08-18 | Moved `DUMMYJSON_BASE`, `Resource`, `SORT_KEYS` out of `urlUtil.ts` into `apiResource.ts`; kept `QueryValue`/`QueryParams` in the util | Kevin: pinning shared infrastructure to one vendor is wrong when the project isn't a dummyjson project. Survey confirmed it — 5 APIs in use (escuelajs Ch1, jsonplaceholder Ch4/5, httpstat.us Ch5, dummyjson Ch8/9) and **no chapter puts API details in `src/utils/`**; Ch4's local `REQUESTS` table is the precedent. **Considered deleting them outright and rejected it**: `ResourcePicker` and `QueryParamsForm` need the data, and hardcoding it into two components would spread the coupling rather than remove it. `urlUtil.ts` now has zero vendor references |
 | 2026-08-16 | Renamed Ch9's `useApi.ts` → `apiResource.ts` | The `use` prefix claimed it was a hook; it has no React in it at all, and a rules-of-hooks linter would try to enforce hook rules on it. Same "name it for what it is" principle as the util merge above. **Ch8's copy keeps its name** — Ch8 stays untouched, so `Readme.md`'s migration table still correctly cites `useApi.ts:NN` for Ch8 call sites |
 
 <!-- TODO: add your own rows as you build. Especially the reversals —
