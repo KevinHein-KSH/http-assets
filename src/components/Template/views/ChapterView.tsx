@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Button } from "@mui/material";
 import { Github } from "lucide-react";
 import { Suspense } from "react";
-import { chapters } from "../../../types/chapters";
+import { chapters } from "../../../types/navigation";
 import { componentRegistry } from "../registry";
 
 interface ChapterViewProps {

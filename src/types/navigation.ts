@@ -1,3 +1,10 @@
+// navigation - the app-shell model: which chapters exist, and which one the UI
+// is currently showing. Consumed only by components/Template/.
+//
+// Renamed from chapters.ts on 2026-08-20. The old name described half of what
+// the file had become; chapter-owned domain types now live with their chapter
+// (see Ch9 LESSON_PLAN §11).
+
 type ChapterKind = "chapter" | "project";
 
 export interface Chapter {

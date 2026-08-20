@@ -2,10 +2,10 @@ import { useState } from "react";
 import HomeView from "./views/HomeView";
 import ChapterView from "./views/ChapterView";
 import { AnimatePresence } from "framer-motion";
-import { chapters } from "../../types/chapters";
+import { chapters } from "../../types/navigation";
 import AppLayout from "../Template/layout/AppLayout";
 
-import { capstoneId, firstChapterId, View } from "../../types/chapters";
+import { capstoneId, firstChapterId, View } from "../../types/navigation";
 
 export default function TemplateContainer() {
   const [view, setView] = useState<View>({ type: "home" });

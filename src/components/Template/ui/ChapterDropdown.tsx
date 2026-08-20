@@ -6,8 +6,8 @@ import {
   ListSubheader,
   SelectChangeEvent,
 } from "@mui/material";
-import { chapters } from "../../../types/chapters";
-import { View } from "../../../types/chapters";
+import { chapters } from "../../../types/navigation";
+import { View } from "../../../types/navigation";
 
 export default function FormDropDown({
   view,

@@ -1,6 +1,6 @@
 import NavBar from "../layout/NavBar";
 import { Button } from "@mui/material";
-import { View } from "../../../types/chapters";
+import { View } from "../../../types/navigation";
 import ChapterDropdown from "../ui/ChapterDropdown";
 import { appConfig } from "../../../config/appConfig";
 import { Layers, HomeIcon, Github } from "lucide-react";

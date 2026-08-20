@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import { View, chapters } from "../../../types/chapters";
+import { View, chapters } from "../../../types/navigation";
 
 interface NavigationBarProps {
   view: View;
