@@ -53,7 +53,6 @@ export default function ErrorDemo() {
   const runSynchronousError = () => {
     try {
       addLog("Attempting to read property on undefined (will throw)...");
-      // @ts-expect-error intentional bug for the demo
       const speed = (undefined as any).speed;
       addLog(`Speed is ${speed}`);
     } catch (err) {

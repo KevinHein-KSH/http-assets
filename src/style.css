@@ -118,20 +118,23 @@ table {
   outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
 } */
+ .branch-btn {
+  /* 1. Base Styles: Outline button matching your primary color variable */
+  border: 1px solid hsl(var(--primary)) !important;
+  color: hsl(var(--primary)) !important;
+  background-color: transparent;
+  transition: all 120ms ease;
 
-.branch-btn {
-  border-color: var(--mui-palette-primary-main);
-  color: #9644d4 !important;
-  transition: background-color 120ms ease, color 120ms ease, opacity 120ms ease;
-}
+  /* 2. Hover State: background becomes primary, text switches, opacity drops */
+  &:hover {
+    background-color: hsl(var(--primary)) !important;
+    color: hsl(var(--primary-foreground)) !important;
+    opacity: 0.6;
+  }
 
-.branch-btn:hover {
-  background-color: #9644d4 !important;
-  color: white !important;
-  opacity: 0.6;
-}
-
-.branch-btn:focus-visible {
-  outline: 2px solid var(--mui-palette-primary-main);
-  outline-offset: 2px;
+  /* 3. Focus Visible State: clean keyboard navigation rings */
+  &:focus-visible {
+    outline: 2px solid hsl(var(--primary)) !important;
+    outline-offset: 2px;
+  }
 }

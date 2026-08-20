@@ -8,6 +8,7 @@ import ErrorDemo from "../Ch5-Errors/ErrorDemo";
 import Ch5Errors from "../Ch5-Errors/Readme.md?raw";
 import HeaderApiKey from "../Ch6-Header/HeaderApiKey";
 import JsonDisplay from "../Ch7-JSON/JsonDisplay";
+import HttpMethods from "../Ch8-HTTP_Methods/HttpMethods";
 
 const Placeholder = ({ title }: { title: string }) => (
   <div className="prose prose-sm dark:prose-invert max-w-none">
@@ -39,7 +40,7 @@ export const componentRegistry: ComponentRegistry = {
   "ch-05": { home: <ErrorDemo />, note: Ch5Errors },
   "ch-06": { home: <HeaderApiKey /> },
   "ch-07": { home: <JsonDisplay /> },
-  "ch-08": { home: <Placeholder title="Chapter 8: Routing" /> },
+  "ch-08": { home: <HttpMethods /> },
   "ch-09": { home: <Placeholder title="Chapter 9: Data Fetching" /> },
   "ch-10": { home: <Placeholder title="Chapter 10: Testing" /> },
   "project-final": { home: <Placeholder title="Capstone Project" /> },

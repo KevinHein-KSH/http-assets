@@ -20,7 +20,7 @@ export default function TemplateContainer() {
 
   useEffect(() => {
     setActiveTab(0);
-  }, [activeChapter?.id]);
+  }, [activeChapter?.id]); // Reset to first tab when chapter changes
 
   const tabs = useMemo(
     () => [

@@ -5,6 +5,13 @@
 // the file had become; chapter-owned domain types now live with their chapter
 // (see Ch9 LESSON_PLAN §11).
 
+// chapters - the app-shell navigation model: which chapters exist, and which
+// one the UI is currently showing. Consumed only by components/Template/.
+//
+// The Chapter 8 user domain used to live here too; it moved out on 2026-08-20
+// (see Ch9 LESSON_PLAN §11) to src/types/user.ts and
+// components/Ch8-HTTP_Methods/types.ts.
+
 type ChapterKind = "chapter" | "project";
 
 export interface Chapter {
@@ -73,7 +80,14 @@ export const chapters: Chapter[] = [
     href: "https://github.com/KevinHein-KSH/http-assets/tree/Ch-7-JSON",
     externalUrl: "https://your-live-demo-url.example.com",
   },
-  { id: "ch-08", label: "Chapter 8", kind: "chapter", description: "Routing" },
+  {
+    id: "ch-08",
+    label: "Chapter 8",
+    kind: "chapter",
+    description: "Http Methods",
+    href: "https://github.com/KevinHein-KSH/http-assets/tree/Ch-8-HTTP-Methods",
+    externalUrl: "https://your-live-demo-url.example.com",
+  },
   {
     id: "ch-09",
     label: "Chapter 9",
