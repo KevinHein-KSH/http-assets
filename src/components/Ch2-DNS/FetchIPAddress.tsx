@@ -51,10 +51,10 @@ export default function FetchIPAddress() {
         (ans: any) => ans.type === 1 && typeof ans.data === "string"
       );
 
-      if (aRecords.length === 0) {
-        setError("No A records found for this domain.");
-        return;
-      }
+    if (aRecords.length === 0) {
+      setError("No A records found for this domain.");
+      return;
+    }
 
       // If you want just the first, keep the first; otherwise join.
       setIpAddress(aRecords.map((a: any) => a.data).join(", "));

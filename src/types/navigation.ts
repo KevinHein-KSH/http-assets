@@ -41,7 +41,14 @@ export const chapters: Chapter[] = [
     href: "https://github.com/KevinHein-KSH/http-assets/tree/Ch-3-URL",
     externalUrl: "https://your-live-demo-url.example.com",
   },
-  { id: "ch-04", label: "Chapter 4", kind: "chapter", description: "Async" },
+  {
+    id: "ch-04",
+    label: "Chapter 4",
+    kind: "chapter",
+    description: "Async",
+    href: "https://github.com/KevinHein-KSH/http-assets/tree/Ch-4-Async-JS",
+    externalUrl: "https://your-live-demo-url.example.com",
+  },
   { id: "ch-05", label: "Chapter 5", kind: "chapter", description: "Errors" },
   { id: "ch-06", label: "Chapter 6", kind: "chapter", description: "Header" },
   {

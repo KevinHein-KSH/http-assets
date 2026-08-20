@@ -35,5 +35,3 @@ coverage/
 # Misc
 .DS_Store
 Thumbs.db
-
-src/components/Ch2-DNS/
