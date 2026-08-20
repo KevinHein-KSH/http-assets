@@ -29,3 +29,7 @@ export function isValidJsonObject(input: string): boolean {
     return false;
   }
 }
+
+export function dedupeByEmail<T extends { email: string }>(array: T[]): T[] {
+  return [...new Map(array.map((u) => [u.email, u])).values()];
+}
