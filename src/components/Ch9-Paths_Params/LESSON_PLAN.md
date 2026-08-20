@@ -4,9 +4,10 @@
 Read this file top to bottom before touching anything in `src/components/Ch9-Paths_Params/`.
 
 - **Branch:** `Ch-9-Paths-Params`, based on `Ch-8-HTTP-Methods` @ `e795804`
-- **Status:** scaffolded only — every function body and all JSX is a `TODO`
+- **Status:** `urlUtil.ts` PART 2 done (`buildUrl`, `describeUrl`); `PathsAndParams.tsx` is a stub
+- **Structure:** 3 code files — page → hook → `apiResource` → `apiFetch`. UI is one component; see §3
 - **Course ref:** <https://github.com/bootdotdev/fcc-learn-http-assets/tree/main/course/9-paths-and-parameters>
-- **Facts below verified:** 2026-08-14
+- **Facts below verified:** 2026-08-18
 
 ---
 
@@ -198,12 +199,20 @@ folder, and why Ch9 must not reach into `Ch8-HTTP_Methods/`.
 2. an entry in `chapters[]` in `src/types/chapters.ts`
 3. an import + entry in `src/components/Template/registry.tsx` (optionally `Readme.md?raw` as `note`)
 
-**Layering** (copied from Ch8): page component → hook → `apiResource.ts` → shared `apiFetch`.
+**Layering** (same chain as Ch8): page → hook → `apiResource.ts` → shared `apiFetch`.
+Kevin wants this pattern kept, so Ch9 keeps it.
 
 Ch8 calls that third layer `useApi.ts`, but **it is not a hook** — no `useState`, no
-`useCallback`, no React, so rules-of-hooks don't apply. Ch9 renames it `apiResource.ts` to stop
-the `use` prefix lying. `hooks/` holds only things that must run inside a component.
-Ch8's own file keeps its name — Ch8 stays untouched.
+`useCallback`, no React. Ch9 names it `apiResource.ts` so the `use` prefix stops lying.
+`hooks/` holds only things that must run inside a component. Ch8's own file keeps its name —
+Ch8 stays untouched.
+
+**But the UI is ONE component.** No per-panel children. Five panel components meant five
+prop-type definitions threading `resource`/`params`/`onChange`/`loading` around, and that
+plumbing is what buried the lesson. Sections are plain JSX blocks, the way Ch3-URL does it —
+that file renders a live URL breakdown in 141 lines with no child components at all.
+
+The split to hold onto: **layers for data, not for markup.**
 
 **Naming / exports**
 - Folders `Ch<N>-<Topic>`, chapter ids zero-padded `"ch-09"`, branches `Ch-<N>-<Topic>`
@@ -236,7 +245,7 @@ catch (err) {
 > **PART 2 is vendor-neutral by design.** Nothing in `urlUtil.ts` knows about any particular API —
 > verified against escuelajs (Ch1), jsonplaceholder (Ch4/5), dummyjson (Ch8/9), GitHub and
 > Cloudflare DNS. Per-API facts (`DUMMYJSON_BASE`, `Resource`, `SORT_KEYS`) live in
-> `Ch9-Paths_Params/apiResource.ts`, matching how every other chapter declares its own endpoints.
+> `Ch9-Paths_Params/apiResource.ts`, the chapter's own API layer.
 >
 > **`src/utils/urlUtil.ts` holds both halves**, banner-separated:
 > **PART 1 CHECK** (Ch3) parses/validates untrusted input, returns `null` on failure;
@@ -265,44 +274,50 @@ types back as each function is implemented.**
 
 ---
 
-## 5. The target UI
+## 5. The target UI — one page, one file
 
-One page, five panels. Each panel is **titled with the lesson it proves**, so a viewer can see
-which concept was implemented just by looking.
+Sections, not components. Everything below lives in `PathsAndParams.tsx`.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │  Chapter 9 — Paths and Parameters                                   │
 ├─────────────────────────────────────────────────────────────────────┤
-│  ① THE PATH  (Lesson 1 & 2: Paths / REST resources)                 │
-│   Resource:  ( ) users  (•) products  ( ) posts  ( ) comments       │
-│   Sub-path:  (•) none   ( ) /search   ( ) /category/smartphones     │
+│  THE PATH            Resource [ products ▾ ]                        │
+│                      Item id  [    ]   ← blank = whole collection   │
 ├─────────────────────────────────────────────────────────────────────┤
-│  ② THE PARAMETERS  (Lesson 3 & 5: one param, then many)             │
-│   sortBy [ price ▾]   order [ desc ▾]   limit [ 5 ]                 │
-│   skip   [ 0     ]    select [ title,price ]   q [        ]         │
-│                    ( blank field = param dropped from the URL )     │
+│  THE PARAMETERS      sortBy [ price ▾]  order [ desc ▾]  limit [ 5 ]│
+│                      skip [ 0 ]  select [ title,price ]  q [      ] │
+│                      ( blank field = param dropped from the URL )   │
 ├─────────────────────────────────────────────────────────────────────┤
-│  ③ THE URL WE BUILT   ← the money shot                              │
+│  THE URL WE BUILT   ← the payoff                                    │
 │   https://dummyjson.com/products?sortBy=price&order=desc&limit=5    │
 │   ┌──────────┬─────────────────────────┐                            │
 │   │ origin   │ https://dummyjson.com   │                            │
-│   │ segment 1│ products                │                            │
+│   │ segment 1│ products                │  ← typing an id adds       │
+│   │ segment 2│ 2                       │     segment 2, live        │
 │   ├──────────┼─────────────────────────┤                            │
 │   │ sortBy   │ price                   │  ← rows appear/vanish live │
 │   │ limit    │ 5                       │                            │
 │   └──────────┴─────────────────────────┘        [ Send Request ]    │
 ├─────────────────────────────────────────────────────────────────────┤
-│  ④ WHAT THE SERVER SUPPORTS  (Lesson 4: Documentation)              │
-│   ⚠ Try sortBy=nonsense → 400. The server decides.                  │
+│  RESULT              <pre> raw JSON </pre>                          │
 ├─────────────────────────────────────────────────────────────────────┤
-│  ⑤ RESULTS                          total: 194   showing: 5         │
+│  ▸ WHAT THE SERVER SUPPORTS   (Lesson 4 — <details>, docs only)     │
+│      GET    /products       list, takes query params                │
+│      GET    /products/2     one item, id is a path segment          │
+│      POST   /products/add   NOT /products — that 404s               │
+│      PUT    /products/2     update                                  │
+│      DELETE /products/2     remove                                  │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-**The teaching trick:** panel ③ recomputes on every render, so the URL assembles itself *live* as
-panels ① and ② change — before any request is sent. That live assembly is the entire point of the
-chapter. Do not move URL construction into the submit handler.
+**The teaching trick:** the URL is derived **on every render**, so it assembles itself live as
+fields change — before anything is sent. That live assembly is the entire point of the chapter.
+Never move URL construction into the submit handler.
+
+**Scope line:** GET-list and GET-one are wired; the other verbs are **documentation only**.
+Ch8 already implements POST/PUT/DELETE, and the REST lesson ("path names a resource") is fully
+carried by `/products` vs `/products/2` — one text field, no method selector, no body editor.
 
 ---
 
@@ -311,15 +326,16 @@ chapter. Do not move URL construction into the submit handler.
 | File | Role | Key TODO |
 |---|---|---|
 | `src/utils/urlUtil.ts` **PART 2** | **the core**, vendor-neutral | ✅ `buildUrl` · ✅ `describeUrl` · ⏸ `buildQueryString` (parked, §6.1) · ⬜ `QueryValue`, `QueryParams` |
-| `PathsAndParams.tsx` | page, default export | state + derive `url` on render + compose panels |
-| `ResourcePicker.tsx` | panel ① | resource radios, sub-path options |
-| `QueryParamsForm.tsx` | panel ② | 6 param controls; `sortBy` options come from `SORT_KEYS[resource]` |
-| `UrlPreview.tsx` | panel ③ | render URL + `describeUrl` breakdown table |
-| `ApiDocsPanel.tsx` | panel ④ | static docs table + error display |
-| `ResultsTable.tsx` | panel ⑤ | dynamic columns, `total` vs `rows.length` |
-| `apiResource.ts` | fetch layer (not a hook) + **all dummyjson-specific facts** | `fetchResource`, `extractRecords`, ⬜ `DUMMYJSON_BASE`, `Resource`, `SORT_KEYS` |
-| `hooks/usePathsParams.ts` | orchestration | state triad + `sendRequest` + `clear` |
+| `PathsAndParams.tsx` | page — **all UI in one component** | ⬜ state, derived `url`, all JSX, the `<details>` docs table |
+| `apiResource.ts` | API layer (not a hook) + dummyjson facts | ✅ `DUMMYJSON_BASE`, `Resource`, `SORT_KEYS` · ⬜ `METHOD_DOCS`, `ResourceResponse`, `fetchResource`, `extractRecords` |
+| `hooks/usePathsParams.ts` | orchestration | ⬜ state triad + `total` + `sendRequest` + `clear` |
 | `Readme.md` | Note tab | lesson notes (TODO) + Ch8 migration table (done) |
+
+**Deleted 2026-08-18** (see §10): `ResourcePicker`, `QueryParamsForm`, `UrlPreview`,
+`ApiDocsPanel`, `ResultsTable` — the five panel components. Their prop-plumbing was the
+layering that buried the lesson; as JSX blocks in one component they cost nothing.
+`apiResource.ts` and the hook were briefly removed too, then **restored on Kevin's call** —
+he wants the page → hook → apiResource → apiFetch chain kept.
 
 ### `buildUrl` — the one function that matters
 
@@ -366,7 +382,7 @@ Decide once the UI exists:
 | Option | Effect |
 |---|---|
 | **A — wire into `buildUrl`** | `url.search = buildQueryString(params ?? {})`. The `url.search` setter strips a leading `?`, so this works as-is and collapses the duplicated rule to one copy. |
-| **B — call from `UrlPreview`** | Display the `?…` tail on its own, which is what Ch9 lessons 3 and 5 actually demonstrate. |
+| **B — call from the URL section** | Display the `?…` tail on its own, which is what Ch9 lessons 3 and 5 actually demonstrate. |
 | **C — delete** | If the UI needs neither. |
 
 > ⚠ **Numbering trap in `urlUtil.ts`:** the stubs say `Lesson 3 + 5` meaning **Chapter 9's**
@@ -413,8 +429,9 @@ Confirm each lesson is visibly demonstrated:
 
 | Check | Expected |
 |---|---|
-| L1 — switch resource | path segments change in panel ③ |
-| L2 — switch resource | `sortBy` dropdown options change |
+| L1 — switch resource | path segments change in the URL breakdown |
+| L2 — switch resource | `sortBy` options change; `comments` disables it entirely |
+| L2 — type an item id | `segments` goes `["products"]` → `["products","2"]`, collection vs item |
 | L3 — set `sortBy` | URL grows `?sortBy=price` |
 | L5 — add `order` + `limit` | `?sortBy=price&order=desc&limit=5` (one `?`, then `&`) |
 | omit-empty — clear `limit` | it disappears from the URL entirely |
@@ -432,8 +449,10 @@ curl -s "https://dummyjson.com/products?sortBy=price&order=desc&limit=5"
 
 ## 9. Out of scope
 
-Ch8 code changes (documented only) · `AbortController` / debounce / URL-state sync / persistence ·
-Chapter 10 · the capstone · adding a test framework.
+Ch8 code changes (documented only) · **live POST/PUT/DELETE — docs only, Ch8 owns the verbs** ·
+a JSON body editor (Ch7's subject) · a results table with dynamic columns (also Ch7) ·
+`AbortController` / debounce / URL-state sync / persistence · Chapter 10 · the capstone ·
+adding a test framework.
 
 ---
 
@@ -454,11 +473,92 @@ this log records *why*, the sections record *what*. Newest at the bottom.
 | 2026-08-14 | **Corrected:** lesson-4 error demo uses `/users/99999` (404), not `sortBy=nonsense` | Verified `sortBy=nonsense` returns **200**, not 400 — dummyjson silently ignores unknown params. The earlier 400 claim was true of boot.dev's API, not dummyjson |
 | 2026-08-16 | **Reversed:** merged `apiUrlUtil.ts` into `urlUtil.ts` as PART 2; deleted the separate file | Kevin: `src/utils/` is shared infrastructure, so splitting a util per-chapter is the wrong axis. The parse-vs-build distinction is real but is now carried by banner comments inside one file. Nothing imported `apiUrlUtil` yet (references were all TODO comments), so the move was free |
 | 2026-08-16 | `buildUrl` implemented, 12/12 verified | Normalise the base to directory form before appending, rather than branching on whether it has a trailing slash. Two earlier attempts failed: `url.pathname = path` discarded a `/v1` prefix, and an inverted guard (`!endsWith("/") && urlPath`) skipped the append entirely for a bare origin, whose pathname is already `"/"` |
-| 2026-08-16 | `buildQueryString` written (8/8) but **parked — commented out, not deleted** | Nothing calls it; `buildUrl` duplicates the omit-empty loop inline. Kept as a comment so the working code and the reasoning survive until the UI shows whether option A (wire into `buildUrl`) or B (query tail in `UrlPreview`) is wanted. Delete if neither. See §6.1 |
+| 2026-08-16 | `buildQueryString` written (8/8) but **parked — commented out, not deleted** | Nothing calls it; `buildUrl` duplicates the omit-empty loop inline. Kept as a comment so the working code and the reasoning survive until the UI shows whether option A (wire into `buildUrl`) or B (query tail in the URL section) is wanted. Delete if neither. See §6.1 |
 | 2026-08-18 | `describeUrl` implemented (8/8) and given a `policy` param | Round-trips against `buildUrl`. `params` is a list of pairs, not an object, because duplicate keys (`?tag=a&tag=b`) are legal and an object drops one. The param was added because `describeUrl` inherited PART 1's strict `DEFAULT_PUBLIC_POLICY` and returned `null` for `localhost` and raw IPs — so `buildUrl` could compose a URL `describeUrl` then refused to describe. **Rejected auto-detecting** and loosening silently: that collapses into "never reject anything" while looking like validation, the same silent-accommodation failure lesson 4 warns about |
-| 2026-08-18 | Moved `DUMMYJSON_BASE`, `Resource`, `SORT_KEYS` out of `urlUtil.ts` into `apiResource.ts`; kept `QueryValue`/`QueryParams` in the util | Kevin: pinning shared infrastructure to one vendor is wrong when the project isn't a dummyjson project. Survey confirmed it — 5 APIs in use (escuelajs Ch1, jsonplaceholder Ch4/5, httpstat.us Ch5, dummyjson Ch8/9) and **no chapter puts API details in `src/utils/`**; Ch4's local `REQUESTS` table is the precedent. **Considered deleting them outright and rejected it**: `ResourcePicker` and `QueryParamsForm` need the data, and hardcoding it into two components would spread the coupling rather than remove it. `urlUtil.ts` now has zero vendor references |
+| 2026-08-18 | Moved `DUMMYJSON_BASE`, `Resource`, `SORT_KEYS` out of `urlUtil.ts` into `apiResource.ts`; kept `QueryValue`/`QueryParams` in the util | Kevin: pinning shared infrastructure to one vendor is wrong when the project isn't a dummyjson project. Survey confirmed it — 5 APIs in use (escuelajs Ch1, jsonplaceholder Ch4/5, httpstat.us Ch5, dummyjson Ch8/9) and **no chapter puts API details in `src/utils/`**; Ch4's local `REQUESTS` table is the precedent. **Considered deleting them outright and rejected it**: the UI needs the data. `urlUtil.ts` now has zero vendor references. *(Superseded same day — `apiResource.ts` was folded into `PathsAndParams.tsx`; the util stays vendor-neutral either way.)* |
+| 2026-08-18 | **Revised the collapse: 8 code files → 3.** The five panel components stay deleted; `apiResource.ts` and `hooks/usePathsParams.ts` are **restored** | Kevin: the one-file version cut too thin — he wants the page → hook → apiResource → apiFetch chain kept, matching Ch8. The settled rule is **layers for data, not for markup**: the request path keeps its layers, the UI does not get per-panel children. `urlUtil.ts` stays vendor-neutral either way |
+| 2026-08-18 | ~~Collapsed the chapter from 8 code files to 1~~ **— superseded by the row above** Deleted the five panel components, `apiResource.ts` and `hooks/usePathsParams.ts`; folded the constants into `PathsAndParams.tsx` | Kevin: the module was over-engineered and the layering buried the lesson. Measured and confirmed — **Ch1–Ch7 are one file each**; Ch3-URL does the closest thing (live URL breakdown) in 141 lines with `useState`/`useMemo` inline, no hook, no api layer. Ch9 had *more* files than Ch8 while doing far less. Five components also meant five prop-type definitions threading `resource`/`params`/`onChange`/`loading` — that plumbing *was* the layering. Six of the eight files were still empty stubs, so the cut was nearly free |
+| 2026-08-18 | Wired GET-list + GET-one only; POST/PUT/DELETE demoted to a `<details>` docs table | A competing plan proposed wiring full CRUD. Rejected: Ch8 already implements all four verbs against dummyjson, and the REST lesson is carried by `/products` vs `/products/2` — one text field instead of a method selector and a JSON body editor. Also, `POST /products` **404s** on dummyjson (it requires `/products/add`), so live CRUD would teach "path names a resource" using an endpoint that breaks the rule. It is a much better lesson-4 footnote than a lesson-2 centrepiece |
 | 2026-08-16 | Renamed Ch9's `useApi.ts` → `apiResource.ts` | The `use` prefix claimed it was a hook; it has no React in it at all, and a rules-of-hooks linter would try to enforce hook rules on it. Same "name it for what it is" principle as the util merge above. **Ch8's copy keeps its name** — Ch8 stays untouched, so `Readme.md`'s migration table still correctly cites `useApi.ts:NN` for Ch8 call sites |
+| 2026-08-20 | **Adopted the type placement rule** (new §11): one consumer → chapter-local, more than one → global `src/types/` | Audited every type across all 11 branches. The rule ratifies almost everything already in the repo and isolates one offender: `src/types/chapters.ts` holds two domains (Template's nav model + Ch8's user model) owned by two different branches. It had already fired once on its own — Ch6 declares a local `generateKey()`, Ch8 promoted a copy into `serviceUtil.ts`, and Ch6's copy was correctly left alone |
+| 2026-08-20 | **Deferred the code refactor; Ch-9 gets docs only** | Branch locality (§11.5) says a type move lands on the branch that *declares* it. Nothing type-related originates on Ch-9 — `chapters.ts` is owned by `Template` (nav half) and `Ch-8` (user half), so the refactor cannot legitimately land here. Executing it means repairing two broken seams, rebasing 9 branches and force-pushing all of them, since every branch is in sync with `origin`. Runbook recorded in `docs/TYPES_AUDIT.md` §5 on `develop`; **the earlier "§0 imports-only waiver" is moot — no Ch8 file is touched at all** |
+| 2026-08-20 | **Recorded, did not fix, a live type regression** (`ApiUser.role`) | `Ch-3-URL` was cut from `Ch-2-DNS` four commits early and missed `b1ba263`, so `role` still carries a `| string` arm that collapses the union to plain `string`. Live on Ch-3→Ch-9. Fixing it means editing Ch-3 and cascading forward, so it is bundled into the deferred runbook rather than patched locally — patching Ch-9 alone would violate §11.5 and conflict when Ch-3 is repaired properly |
 
 <!-- TODO: add your own rows as you build. Especially the reversals —
      "tried X, it didn't work, went with Y" is the most valuable kind of entry
      for a future session, and the kind most often lost. -->
+
+---
+
+## 11. Type placement rule
+
+**Adopted 2026-08-20.** Project-wide, not Chapter 9 specific. The full cross-branch evidence is
+in `docs/TYPES_AUDIT.md` (on `develop`); this section is the rule itself.
+
+> **A type used by only one chapter/module lives in that chapter/module.**
+> **A type used by more than one lives in the global `src/types/`.**
+
+Five clauses. The first three make the rule testable, the fourth bounds it, the fifth keeps it
+safe under this repo's branch chain.
+
+### 11.1 "Used elsewhere" must be counted, not guessed
+
+Every later branch *contains* every earlier file, so "is it used in another chapter?" has no
+meaningful answer at the chain level. Count actual importers on **one** branch:
+
+```bash
+grep -rn "TypeName" --include=*.ts --include=*.tsx src | grep -v "<owning-folder>/"
+```
+
+Zero hits → chapter-local. One or more → `src/types/`.
+
+### 11.2 Promotion is forward-only
+
+A type can be single-chapter today and shared two chapters later. When that happens, promote it
+**on the new chapter's branch**, and leave the earlier chapter's copy alone. Earlier branches are
+published teaching snapshots; rewriting one invalidates a recorded lesson.
+
+Cross-branch duplication is the accepted cost. `generateKey()` is the worked example: Ch6 declares
+its own in `HeaderApiKey.tsx`, Ch8 promoted a copy into `utils/serviceUtil.ts` for Ch8 and Ch9, and
+Ch6's copy stayed. That is correct, not a bug to clean up.
+
+### 11.3 Anticipated sharing counts — if documented
+
+`urlUtil.ts` PART 2 (`buildUrl`, `QueryParams`, `UrlDescription`) has exactly one consumer today,
+so 11.1 would push it into Ch9. It stays in `utils/` because it is deliberately vendor-neutral for
+later chapters — **and the file header says so**.
+
+A type may sit centrally ahead of its second consumer if a comment states why. Undocumented
+anticipation does not qualify; that is just a guess with better placement.
+
+### 11.4 Scope: type declarations, not functions
+
+The rule governs `type` / `interface` / type-carrying `const`. Functions stay where they are.
+
+Without this bound, `mapUser` and `validateUser` (Ch8-only, `User`-typed) get dragged out of
+`serviceUtil.ts` — colliding with §0's "do not touch Ch8" rule and with Ch9's plan to import
+`apiFetch` from that same file.
+
+### 11.5 Branch locality
+
+**Every type move lands on the branch that declares the type**, then flows forward by rebase.
+Editing Chapter N's types from Chapter N+1's branch is a defect, not a shortcut — the next rebase
+turns it into a conflict.
+
+This is why Chapter 9 adopted the rule but applied none of it: `Ch-9` is already compliant
+(`Resource`/`SORT_KEYS` local, `urlUtil` shared), and the one offending file is owned by `Template`
+and `Ch-8`.
+
+### 11.6 Current verdict
+
+| Types | Owner | Placement |
+|---|---|---|
+| `Resource`, `SORT_KEYS`, `DUMMYJSON_BASE` | Ch-9 | `apiResource.ts` — local ✅ |
+| `Mode`/`RequestDef` (Ch4), `LogTone`/`LogEntry` (Ch5), `CatApiResponse` (Ch6), `ApiUser` (Ch1), all `*Props` | their chapter | local ✅ |
+| `urlUtil` PART 1 + PART 2 | shared (Ch3 + Ch9) | `utils/urlUtil.ts` ✅ |
+| `Stored`, `emptyUser` | Ch-8 | ✗ in `types/chapters.ts` — should be Ch8-local |
+| `User`, `UserResp`, `ErrorResp` | Ch-8, but `serviceUtil.ts` consumes them | central is correct; filename is not |
+| `Chapter`, `View`, `chapters[]`, ids | Template | central as app-shell config — recorded exception |
+
+Target layout and the ordered execution steps are in `docs/TYPES_AUDIT.md` §5. **Do not apply any
+of it from this branch.**

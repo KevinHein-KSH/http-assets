@@ -247,16 +247,23 @@ export function getUrl(input: string, policy = DEFAULT_PUBLIC_POLICY) {
 // Deliberately vendor-neutral: nothing here knows about any particular API.
 // Which resources exist, what their sort keys are and what the base url is
 // are per-API facts, so they live with the chapter that talks to that API
-// (see Ch9-Paths_Params/apiResource.ts), not in this shared util.
+// (see Ch9-Paths_Params/PathsAndParams.tsx), not in this shared util.
 
 // ---------- types ----------
 
 // TODO: a query param value. Include undefined/null so "omit empty" works
 //       without tripping exactOptionalPropertyTypes.
-// export type QueryValue = string | number | boolean | null | undefined;
+export type QueryValue = string | number | boolean | null | undefined;
 
 // TODO: the bag of params handed to buildUrl
-// export type QueryParams = Record<string, QueryValue>;
+export type QueryParams = Record<string, QueryValue>;
+
+// TODO: a description of a URL, including its origin, path segments, and query parameters
+export type UrlDescription = {
+  origin: string;
+  segments: string[];
+  params: Array<{ key: string; value: string }>;
+};
 
 // ---------- build the url ----------
 
@@ -271,7 +278,7 @@ export function getUrl(input: string, policy = DEFAULT_PUBLIC_POLICY) {
 export function buildUrl(
   base: string,
   segments: string[],
-  params?: object,
+  params?: QueryParams,
 ): string {
   try {
     const url = new URL(base);
@@ -315,7 +322,7 @@ export function buildUrl(
 //   A. Wire it into buildUrl:  url.search = buildQueryString(params ?? {});
 //      The `url.search` setter strips a leading "?", so this Just Works, and
 //      it collapses the duplicated omit-empty rule to one copy.
-//   B. Call it from UrlPreview to show the "?..." tail on its own, which is
+//   B. Call it from the page to show the "?..." tail on its own, which is
 //      what Ch9 lessons 3 and 5 are actually demonstrating.
 // If the UI ends up needing neither, delete this block.
 //
@@ -343,12 +350,6 @@ export function buildUrl(
 // }
 
 // ---------- take the url back apart, for the UI preview ----------
-
-export type UrlDescription = {
-  origin: string;
-  segments: string[];
-  params: Array<{ key: string; value: string }>;
-};
 
 // The inverse of buildUrl: splits a composed URL into the pieces a preview
 // table renders. Reuses getUrl() from PART 1 rather than parsing again.

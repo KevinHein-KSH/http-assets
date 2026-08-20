@@ -11,7 +11,7 @@
 export function usePathsParams() {
   // TODO: state (same triad every chapter in this repo uses)
   //  - data:    useState<unknown[]>([])
-  //  - total:   useState<number>(0)   <- server's full count, for panel 5
+  //  - total:   useState<number>(0)   <- server's full count, shown by the page
   //  - loading: useState<boolean>(false)
   //  - error:   useState<string | null>(null)
 
@@ -29,9 +29,9 @@ export function usePathsParams() {
   //     setLoading(false);
   //   }
   //
-  // The catch is what powers the Lesson 4 demo: a deliberately bad sortBy
-  // returns 400, apiFetch throws, and the message lands in the red banner
-  // instead of crashing the page.
+  // The catch is what powers the Lesson 4 error demo. NOTE dummyjson mostly
+  // does NOT reject bad input - ?sortBy=nonsense returns 200 with unsorted
+  // data. Use /users/99999 for a real error: 404 with a clean JSON body.
 
   // TODO: clear = useCallback(() => reset data/total/error)
 
