@@ -4,6 +4,8 @@ import URLParts from "../Ch3-URL/URLParts";
 import Ch3URLNote from "../Ch3-URL/Readme.md?raw";
 import AsyncDemo from "../Ch4-Async/AsyncDemo";
 import Ch4Async from "../Ch4-Async/Readme.md?raw";
+import ErrorDemo from "../Ch5-Errors/ErrorDemo";
+import Ch5Errors from "../Ch5-Errors/Readme.md?raw";
 
 const Placeholder = ({ title }: { title: string }) => (
   <div className="prose prose-sm dark:prose-invert max-w-none">
@@ -32,7 +34,7 @@ export const componentRegistry: ComponentRegistry = {
   "ch-02": { home: <FetchIPAddress /> },
   "ch-03": { home: <URLParts />, note: Ch3URLNote },
   "ch-04": { home: <AsyncDemo />, note: Ch4Async },
-  "ch-05": { home: <Placeholder title="Chapter 5: Effects" /> },
+  "ch-05": { home: <ErrorDemo />, note: Ch5Errors },
   "ch-06": { home: <Placeholder title="Chapter 6: Headers" /> },
   "ch-07": { home: <Placeholder title="Chapter 7: JSON" /> },
   "ch-08": { home: <Placeholder title="Chapter 8: Routing" /> },
