@@ -4,7 +4,7 @@
 Read this file top to bottom before touching anything in `src/components/Ch9-Paths_Params/`.
 
 - **Branch:** `Ch-9-Paths-Params`, based on `Ch-8-HTTP-Methods` @ `e795804`
-- **Status:** `urlUtil.ts` PART 2 done (`buildUrl`, `describeUrl`); `PathsAndParams.tsx` is a stub
+- **Status:** `urlUtil.ts` PART 2 done · `apiResource.ts` (§6.2) and `hooks/usePathsParams.ts` (§6.3) done · next: `PathsAndParams.tsx`, then §7 wire-up
 - **Structure:** 3 code files — page → hook → `apiResource` → `apiFetch`. UI is one component; see §3
 - **Course ref:** <https://github.com/bootdotdev/fcc-learn-http-assets/tree/main/course/9-paths-and-parameters>
 - **Facts below verified:** 2026-08-18
@@ -325,10 +325,10 @@ carried by `/products` vs `/products/2` — one text field, no method selector, 
 
 | File | Role | Key TODO |
 |---|---|---|
-| `src/utils/urlUtil.ts` **PART 2** | **the core**, vendor-neutral | ✅ `buildUrl` · ✅ `describeUrl` · ⏸ `buildQueryString` (parked, §6.1) · ⬜ `QueryValue`, `QueryParams` |
+| `src/utils/urlUtil.ts` **PART 2** | **the core**, vendor-neutral | ✅ `buildUrl` · ✅ `describeUrl` · ✅ `QueryValue`, `QueryParams`, `UrlDescription` · ⏸ `buildQueryString` (parked, §6.1) |
 | `PathsAndParams.tsx` | page — **all UI in one component** | ⬜ state, derived `url`, all JSX, the `<details>` docs table |
-| `apiResource.ts` | API layer (not a hook) + dummyjson facts | ✅ `DUMMYJSON_BASE`, `Resource`, `SORT_KEYS` · ⬜ `METHOD_DOCS`, `ResourceResponse`, `fetchResource`, `extractRecords` |
-| `hooks/usePathsParams.ts` | orchestration | ⬜ state triad + `total` + `sendRequest` + `clear` |
+| `apiResource.ts` | API layer (not a hook) + dummyjson facts | ✅ **done** — all exports implemented, comments moved to §6.2 |
+| `hooks/usePathsParams.ts` | orchestration | ✅ **done** — see §6.3 |
 | `Readme.md` | Note tab | lesson notes (TODO) + Ch8 migration table (done) |
 
 **Deleted 2026-08-18** (see §10): `ResourcePicker`, `QueryParamsForm`, `UrlPreview`,
@@ -388,6 +388,64 @@ Decide once the UI exists:
 > ⚠ **Numbering trap in `urlUtil.ts`:** the stubs say `Lesson 3 + 5` meaning **Chapter 9's**
 > lessons 3 and 5, while PART 1's header says `Ch3` meaning **Chapter 3**. Same numeral, two
 > different meanings in one file.
+
+---
+
+### 6.2 `apiResource.ts` — the API layer (the file carries no comments)
+
+**Implemented 2026-08-28.** The file is deliberately bare — every explanation that used to sit
+in it as a comment lives here instead, so the code reads as code and the reasoning has one home.
+If you change that file, update this section in the same turn.
+
+**Why it is not called `useApi.ts`** (Ch8's name for the equivalent) — there is no React in it.
+No `useState`, no `useCallback`. A rules-of-hooks linter would wrongly police a `use`-prefixed
+file. Real hooks live in `./hooks/`. Ch8's copy keeps its old name; Ch8 stays untouched.
+
+**Why the dummyjson facts live here and not in `utils/urlUtil.ts`** — `DUMMYJSON_BASE`,
+`Resource` and `SORT_KEYS` are facts about *one* API. `urlUtil` stays vendor-neutral so
+Ch1/Ch4/Ch5/Ch8 — five different APIs between them — can share it. See §10, 2026-08-18.
+
+**This file builds no URLs.** The URL arrives already composed by `buildUrl`. Ch8 glued its URLs
+together with strings in its equivalent file; that separation is the chapter's lesson.
+
+| Export | Notes |
+|---|---|
+| `SORT_KEYS` | Only keys the server **actually honours**, each confirmed by comparing `order=asc` against `order=desc`. `comments: []` is empty on purpose — dummyjson ignores sorting there entirely, which lets the UI disable the dropdown. Never list a key that silently does nothing. |
+| `METHOD_DOCS` | **Documentation only, never executed.** Ch8 already runs POST/PUT/DELETE; Ch9's job is the path, not the verb. The page renders it in a `<details>` at the bottom (lesson 4). |
+| `ResourceResponse` | `total`/`skip`/`limit` are **optional** because GET-one (`/products/2`) returns the bare object with no envelope. One type, both shapes. The page must therefore guard `total` — `body.total ?? 0`. |
+| `fetchResource` | `apiFetch` is typed `Promise<any>`; the return annotation is what stops that `any` at this boundary. It already throws on `!response.ok`, and that throw is left to escape so the hook catches it. `serviceUtil.ts` is shared with Ch8 and stays unchanged. |
+| `extractRecords` | The array key changes per resource (`body.users`, `body.products`), so it is looked up as `body[resource]`. GET-one has no envelope and no array; returning `[]` is fine as long as the page renders the raw body in that case. |
+
+**The three silent-failure quirks** (lesson 4 material, verified 2026-08-18 — each one *fails
+without erroring*, which is the whole point):
+
+- `POST /products` → **404**. dummyjson wants `/products/add`. REST says post to the collection;
+  this server disagrees. Read the docs, not the rule.
+- `/comments` → ignores every sort key. `asc` and `desc` return the same rows.
+- `?sortBy=nonsense` → **200** with unsorted data and no warning.
+
+---
+
+### 6.3 `hooks/usePathsParams.ts` — the request hook (also comment-free)
+
+**Implemented 2026-08-28.** Same convention as §6.2: the file carries one pointer line, the
+reasoning lives here. Update this section in the same turn as that file.
+
+Mirrors `useHttpMethods.ts` from Ch8 — same state triad, same `useCallback` +
+`try/catch/finally` skeleton, same error idiom — but much smaller, because Ch9 is read-only
+(GET). No CRUD branching, no localStorage.
+
+Returns `{ data, total, loading, error, sendRequest, clear }`.
+
+| Piece | Notes |
+|---|---|
+| `data: unknown[]` | Whatever `extractRecords` pulled out. Deliberately not typed per-resource — the body's shape is Ch7's subject, not this chapter's. |
+| `total: number` | The server's full count. `body.total ?? 0` — the `??` is load-bearing, because `ResourceResponse.total` is optional for the GET-one shape (§6.2). |
+| `sendRequest(fullUrl, apiKey, resource)` | Takes the URL **already composed** by `buildUrl`; the hook never builds one. `resource` is passed separately only so `extractRecords` knows which envelope key to read. |
+| error handling | House idiom, kept identical to Ch8: `err instanceof Error ? err.message : String(err)`. This `catch` is what powers the lesson-4 error demo — use `/users/99999` (404, clean JSON), **not** `?sortBy=nonsense`, which returns 200. |
+| `clear` | Resets data/total/error. Leaves `loading` alone — `finally` owns it. |
+
+Both callbacks have `[]` deps: they only ever call setters, which React guarantees are stable.
 
 ---
 
@@ -483,6 +541,10 @@ this log records *why*, the sections record *what*. Newest at the bottom.
 | 2026-08-20 | **Adopted the type placement rule** (new §11): one consumer → chapter-local, more than one → global `src/types/` | Audited every type across all 11 branches. The rule ratifies almost everything already in the repo and isolates one offender: `src/types/chapters.ts` holds two domains (Template's nav model + Ch8's user model) owned by two different branches. It had already fired once on its own — Ch6 declares a local `generateKey()`, Ch8 promoted a copy into `serviceUtil.ts`, and Ch6's copy was correctly left alone |
 | 2026-08-20 | **Deferred the code refactor; Ch-9 gets docs only** | Branch locality (§11.5) says a type move lands on the branch that *declares* it. Nothing type-related originates on Ch-9 — `chapters.ts` is owned by `Template` (nav half) and `Ch-8` (user half), so the refactor cannot legitimately land here. Executing it means repairing two broken seams, rebasing 9 branches and force-pushing all of them, since every branch is in sync with `origin`. Runbook recorded in `docs/TYPES_AUDIT.md` §5 on `develop`; **the earlier "§0 imports-only waiver" is moot — no Ch8 file is touched at all** |
 | 2026-08-20 | **Recorded, did not fix, a live type regression** (`ApiUser.role`) | `Ch-3-URL` was cut from `Ch-2-DNS` four commits early and missed `b1ba263`, so `role` still carries a `| string` arm that collapses the union to plain `string`. Live on Ch-3→Ch-9. Fixing it means editing Ch-3 and cascading forward, so it is bundled into the deferred runbook rather than patched locally — patching Ch-9 alone would violate §11.5 and conflict when Ch-3 is repaired properly |
+
+| 2026-08-28 | `apiResource.ts` implemented; **all comments stripped from it into §6.2** | Kevin: the explanation belongs in the handoff doc, not threaded through the code. The file was ~60% comment by line. Trade-off accepted: the rationale is now one hop away, so §6.2 must be updated in the same turn as any change to that file. `ResourceResponse` made optional-fielded rather than a union, so one type covers the list envelope and the bare GET-one object |
+
+| 2026-08-28 | `usePathsParams` implemented; comments stripped into §6.3, same as §6.2 | Consistency — the two non-UI files now both read as plain code with the reasoning in this doc. `setTotal(body.total ?? 0)` is the first place the optional-field decision from §6.2 actually bites |
 
 <!-- TODO: add your own rows as you build. Especially the reversals —
      "tried X, it didn't work, went with Y" is the most valuable kind of entry
