@@ -97,7 +97,7 @@ a repeat.
 | Path | Params | Notes |
 |---|---|---|
 | `/users` `/posts` `/products` `/comments` | `limit` `skip` `sortBy` `order` `select` | all `GET 200` |
-| `/users/search?q=` | `q` required | sub-resource path |
+| `/users/search?q=` `/products/search?q=` | `q` required | sub-resource path. **`q` on a plain collection is silently ignored** — re-verified 2026-08-29 |
 | `/users/filter?key=&value=` | `key` + `value` both required | best multi-param demo (lesson 5) |
 | `/products/category/{name}` | `limit` `skip` | **two** path segments — good for lesson 1 |
 
@@ -435,7 +435,13 @@ Mirrors `useHttpMethods.ts` from Ch8 — same state triad, same `useCallback` +
 `try/catch/finally` skeleton, same error idiom — but much smaller, because Ch9 is read-only
 (GET). No CRUD branching, no localStorage.
 
-Returns `{ data, total, loading, error, sendRequest, clear }`.
+Returns `{ data, body, total, loading, error, sendRequest, clear }`.
+
+`body` was added 2026-08-28 after a live bug: `/products/1` succeeded and showed **nothing**.
+GET-one returns the bare object, so `extractRecords` correctly returned `[]`, and the page's
+results panel was gated on `data.length > 0`. The hook now keeps the raw body as well, and the
+page falls back to rendering it when `data` is empty — which is what §6.2's "as long as the page
+renders the raw body in that case" was asking for.
 
 | Piece | Notes |
 |---|---|
@@ -589,6 +595,10 @@ this log records *why*, the sections record *what*. Newest at the bottom.
 | 2026-08-28 | **Split `Readme.md` from `LESSON_PLAN.md` by audience.** Readme = learner-facing lesson notes only; the Ch8 migration table moved to §12 and the duplicated API table was deleted (§2 already had it) | Kevin: the Readme had become a second plan — TODO placeholders, repo wiring notes and an API reference — none of which a reader of the Note tab needs. Two docs with two audiences: this file is for whoever builds the chapter, `Readme.md` is for whoever studies it. Ch3/Ch4/Ch5 Readmes are pure explanation and set the precedent |
 
 | 2026-08-28 | §7 wire-up landed; `Readme.md` rewritten as learner notes; chapter is feature-complete | `registry.tsx` now renders `<PathsAndParams />` with `Readme.md?raw` as the Note tab, and the `ch-09` nav entry is corrected. One correction on the way in: `href` pointed at `Ch-9-Paths-and-Params`, a branch that does not exist — the real name has no "and". Only §8 browser verification is left |
+
+| 2026-08-28 | Hook keeps the raw `body` alongside the extracted `data` | Found in the browser: GET-one (`/products/1`) returned 200 and rendered nothing at all — no error, no result. `extractRecords` returning `[]` for the envelope-less shape was correct; the bug was the page gating its results panel on `data.length > 0` and the hook discarding the only thing left to show. The list path is unchanged; the single-item path now renders the raw object and labels itself as having no list envelope |
+
+| 2026-08-29 | Added `PARAM_DOCS` beside `METHOD_DOCS`; both now render as `.kv` tables, not a JSON dump | The `select` and `q` fields shipped with no guidance anywhere - not in the UI, `METHOD_DOCS` or the Readme - so a reader had no way to know what to type. Probing to write them up turned up a fourth silent failure: **`/products?q=phone` returns 200 and ignores `q` entirely**; search is a sub-resource, `/products/search?q=`. Documented in the Readme as a trap, since it is lesson 4 landing inside lesson 3, and the `q` field now carries helper text saying it needs `search` as the item id |
 
 <!-- TODO: add your own rows as you build. Especially the reversals —
      "tried X, it didn't work, went with Y" is the most valuable kind of entry

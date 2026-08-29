@@ -98,6 +98,34 @@ https://dummyjson.com/products?limit=5
 * They are **optional** — `/products` on its own is a perfectly good request.
 * The **server decides** which keys exist. An unknown key is not your call to make.
 
+### The six params this chapter uses
+
+| Param | Example | What it does |
+|---|---|---|
+| `sortBy` | `?sortBy=price` | which field to sort on — must be a **real field name** |
+| `order` | `?order=desc` | `asc` or `desc`; only meaningful next to `sortBy` |
+| `limit` | `?limit=5` | how many records to return |
+| `skip` | `?skip=10` | how many to skip — paging, paired with `limit` |
+| `select` | `?select=title,price` | return **only** these fields, comma-separated (`id` always comes back anyway) |
+| `q` | `?q=phone` | search term — **but see below** |
+
+### 🪤 `q` is a trap
+
+`q` does not work on a plain collection. This returns the full, unfiltered list:
+
+```
+https://dummyjson.com/products?q=phone      ← 200 OK, and completely ignored
+```
+
+Search lives on its own **sub-resource**, one extra path segment:
+
+```
+https://dummyjson.com/products/search?q=phone   ← this one actually searches
+```
+
+Same param name, same server — it exists on one path and not on the other. Which is lesson 4
+arriving early: **the path decides which params mean anything.**
+
 ### Path or query?
 
 A useful rule of thumb:
@@ -126,6 +154,7 @@ behaviours from `dummyjson.com`, all verified:
 | What you send | What you'd expect | What actually happens |
 |---|---|---|
 | `?sortBy=nonsense` | `400 Bad Request` | **`200 OK`** — data comes back unsorted, no warning |
+| `/products?q=phone` | filtered results | `200 OK` — **`q` is ignored**; search is `/products/search` |
 | `/comments?sortBy=id` | sorted comments | `200 OK` — sorting is **ignored entirely** here |
 | `POST /products` | creates a product | **`404`** — this server wants `/products/add` |
 

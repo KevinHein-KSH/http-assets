@@ -21,6 +21,15 @@ export const METHOD_DOCS = [
   { method: "DELETE", path: "/products/2",   note: "remove" },
 ];
 
+export const PARAM_DOCS = [
+  { param: "sortBy", example: "?sortBy=price",        note: "field to sort on; must be a real field name" },
+  { param: "order",  example: "?order=desc",          note: "asc | desc - only meaningful beside sortBy" },
+  { param: "limit",  example: "?limit=5",             note: "how many records; 0 means no limit" },
+  { param: "skip",   example: "?skip=10",             note: "how many to skip - paging, with limit" },
+  { param: "select", example: "?select=title,price",  note: "comma-separated fields; id always comes back" },
+  { param: "q",      example: "/products/search?q=phone", note: "SEARCH ONLY - ignored on a plain collection" },
+];
+
 export type ResourceResponse = {
   total?: number;
   skip?: number;
