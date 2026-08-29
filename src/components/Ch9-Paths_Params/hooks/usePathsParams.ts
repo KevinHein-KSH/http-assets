@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import { fetchResource, extractRecords, Resource } from "../apiResource";
 
-export function usePathsParams() {
+export default function usePathsParams() {
   const [data, setData] = useState<unknown[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);

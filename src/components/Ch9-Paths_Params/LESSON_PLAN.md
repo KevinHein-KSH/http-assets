@@ -4,7 +4,7 @@
 Read this file top to bottom before touching anything in `src/components/Ch9-Paths_Params/`.
 
 - **Branch:** `Ch-9-Paths-Params`, based on `Ch-8-HTTP-Methods` @ `e795804`
-- **Status:** `urlUtil.ts` PART 2 done · `apiResource.ts` (§6.2) and `hooks/usePathsParams.ts` (§6.3) done · next: `PathsAndParams.tsx`, then §7 wire-up
+- **Status:** code complete (§6.2–§6.4) · wire-up done (§7) · `Readme.md` written · **next: §8 verification in the browser**
 - **Structure:** 3 code files — page → hook → `apiResource` → `apiFetch`. UI is one component; see §3
 - **Course ref:** <https://github.com/bootdotdev/fcc-learn-http-assets/tree/main/course/9-paths-and-parameters>
 - **Facts below verified:** 2026-08-18
@@ -18,7 +18,7 @@ These are explicit instructions from Kevin. Violating them is the main failure m
 | Rule | Detail |
 |---|---|
 | **Do not implement the logic** | Kevin is working through the course to *learn*. The scaffold is intentionally empty. Write code only when he explicitly asks for that specific piece. Default to explaining, reviewing, and unblocking. |
-| **Do not touch Chapter 8** | `src/components/Ch8-HTTP_Methods/**` and `src/utils/serviceUtil.ts` stay unchanged. The Ch8 overlap is *documented* in `Readme.md`, not applied. |
+| **Do not touch Chapter 8** | `src/components/Ch8-HTTP_Methods/**` and `src/utils/serviceUtil.ts` stay unchanged. The Ch8 overlap is *documented* in §12, not applied. |
 | **Stay inside the lesson scope** | No `AbortController`, no debounce, no URL-state/address-bar sync, no localStorage persistence. These were considered and explicitly cut. |
 | **No unrequested refactors** | Discussing an improvement is not approval to apply it. Wait for an explicit go-ahead. |
 | **Branch chain** | New chapter branches come from the **previous chapter**, never from `develop`. `Ch-8-HTTP-Methods` → `Ch-9-Paths-Params`. |
@@ -326,10 +326,10 @@ carried by `/products` vs `/products/2` — one text field, no method selector, 
 | File | Role | Key TODO |
 |---|---|---|
 | `src/utils/urlUtil.ts` **PART 2** | **the core**, vendor-neutral | ✅ `buildUrl` · ✅ `describeUrl` · ✅ `QueryValue`, `QueryParams`, `UrlDescription` · ⏸ `buildQueryString` (parked, §6.1) |
-| `PathsAndParams.tsx` | page — **all UI in one component** | ⬜ state, derived `url`, all JSX, the `<details>` docs table |
+| `PathsAndParams.tsx` | page — **all UI in one component** | ✅ **done** — see §6.4; polish still open (see §7) |
 | `apiResource.ts` | API layer (not a hook) + dummyjson facts | ✅ **done** — all exports implemented, comments moved to §6.2 |
 | `hooks/usePathsParams.ts` | orchestration | ✅ **done** — see §6.3 |
-| `Readme.md` | Note tab | lesson notes (TODO) + Ch8 migration table (done) |
+| `Readme.md` | Note tab | ✅ learner-facing lesson notes only — planning content moved here (§12) |
 
 **Deleted 2026-08-18** (see §10): `ResourcePicker`, `QueryParamsForm`, `UrlPreview`,
 `ApiDocsPanel`, `ResultsTable` — the five panel components. Their prop-plumbing was the
@@ -449,25 +449,63 @@ Both callbacks have `[]` deps: they only ever call setters, which React guarante
 
 ---
 
-## 7. Remaining wire-up (not yet done)
+### 6.4 `PathsAndParams.tsx` — the page (comment-free, same as §6.2/§6.3)
 
-Both files are currently **untouched** — these edits are Kevin's to make.
+**Implemented 2026-08-28.** One pointer line in the file; the reasoning is here.
 
-**`src/types/chapters.ts`** — the `ch-09` entry:
-- `description: "Data Fetching"` is **wrong**, the chapter is "Paths and Parameters"
-- missing `href` — add `https://github.com/KevinHein-KSH/http-assets/tree/Ch-9-Paths-Params`
-- add `externalUrl` to match ch-01…ch-08
+**The one-sentence lesson:** compose the right PATH and QUERY PARAMS with `buildUrl`, and watch
+the URL assemble itself live, *before* anything is sent.
 
-**`src/components/Template/registry.tsx`** — replace the `ch-09` `<Placeholder>`:
+**Lesson map** (boot.dev ch9) and where each one is visible on the page:
+
+| # | Lesson | Where it shows |
+|---|---|---|
+| 1 | URL Paths | `fullURL = base + path` — the monospace URL line |
+| 2 | RESTful APIs | the path names a RESOURCE; typing an item id turns `["products"]` into `["products","2"]` in the breakdown. Verbs are docs-only |
+| 3 | Query Parameters | `?sortBy=price` appears as you pick it |
+| 4 | Documentation | the `<details>` table + the three silent-failure quirks (§6.2) |
+| 5 | Multiple Query Params | `?sortBy=price&order=desc&limit=5` — `?` opens, `&` separates |
+
+**Why one component, no child panels.** Five panels would mean five prop-type definitions
+threading `resource`/`params`/`onChange`/`loading` around, and that plumbing buries the lesson.
+Sections are plain JSX blocks, the way `Ch3-URL/URLParts.tsx` does it. The *data* path keeps its
+layers (page → hook → `apiResource` → `apiFetch`); the markup does not. See §10, 2026-08-18.
+
+**The URL is derived on every render, not in the submit handler.** That is the teaching point —
+`buildUrl` runs as the user types, so the breakdown rows appear and vanish live and omit-empty is
+visible rather than described. `segments` is computed inline; `url` and `parts` are `useMemo`'d.
+
+**Wired live:** GET list (`/products` + sortBy, order, limit, skip, select, q) and GET one
+(`/products/2` — one extra segment, the path-param lesson). **Docs only:** POST/PUT/DELETE, which
+are Ch8's job.
+
+**State:** `resource` (default `"products"`), `itemId` (blank = collection), a single `params`
+object of six strings where blank means "leave it out of the URL", and `apiKey` from
+`useState(() => generateKey())` so it is generated once on mount.
+
+---
+
+## 7. Wire-up — done 2026-08-28
+
+Both edits are in. `src/types/navigation.ts`, the `ch-09` entry:
+
+- `description` corrected from `"Data Fetching"` to `"Paths and Parameters"`
+- `href` added — note the branch is `Ch-9-Paths-Params`, **no "and"**; the first attempt used
+  `Ch-9-Paths-and-Params` and produced a dead link
+- `externalUrl` added, carrying the same `your-live-demo-url.example.com` placeholder every other
+  chapter uses — not a real URL yet, and not a Ch-9 problem to solve
+
+`src/components/Template/registry.tsx` — the `ch-09` `<Placeholder>` is replaced:
+
 ```tsx
 import PathsAndParams from "../Ch9-Paths_Params/PathsAndParams";
-import Ch9Note from "../Ch9-Paths_Params/Readme.md?raw";
-// …
-"ch-09": { home: <PathsAndParams />, note: Ch9Note },
+import Ch9PathsNote from "../Ch9-Paths_Params/Readme.md?raw";
+// ...
+"ch-09": { home: <PathsAndParams />, note: Ch9PathsNote },
 ```
 
-Neither belongs in `chapters.ts` — that file is already overloaded with Ch8-only types. They split
-by *who they're about*:
+Neither of these types belongs in `chapters.ts` — that file is already overloaded with Ch8-only
+types. They split by *who they are about*:
 
 | Type | Home | Why |
 |---|---|---|
@@ -545,6 +583,12 @@ this log records *why*, the sections record *what*. Newest at the bottom.
 | 2026-08-28 | `apiResource.ts` implemented; **all comments stripped from it into §6.2** | Kevin: the explanation belongs in the handoff doc, not threaded through the code. The file was ~60% comment by line. Trade-off accepted: the rationale is now one hop away, so §6.2 must be updated in the same turn as any change to that file. `ResourceResponse` made optional-fielded rather than a union, so one type covers the list envelope and the bare GET-one object |
 
 | 2026-08-28 | `usePathsParams` implemented; comments stripped into §6.3, same as §6.2 | Consistency — the two non-UI files now both read as plain code with the reasoning in this doc. `setTotal(body.total ?? 0)` is the first place the optional-field decision from §6.2 actually bites |
+
+| 2026-08-28 | `PathsAndParams.tsx` implemented; comments stripped into §6.4 | Completes the convention started in §6.2 — all four Ch-9 code files are now plain code with the reasoning in this doc. The chapter is code-complete; what remains is wiring (§7), the `Readme.md` lesson notes and §8 verification |
+
+| 2026-08-28 | **Split `Readme.md` from `LESSON_PLAN.md` by audience.** Readme = learner-facing lesson notes only; the Ch8 migration table moved to §12 and the duplicated API table was deleted (§2 already had it) | Kevin: the Readme had become a second plan — TODO placeholders, repo wiring notes and an API reference — none of which a reader of the Note tab needs. Two docs with two audiences: this file is for whoever builds the chapter, `Readme.md` is for whoever studies it. Ch3/Ch4/Ch5 Readmes are pure explanation and set the precedent |
+
+| 2026-08-28 | §7 wire-up landed; `Readme.md` rewritten as learner notes; chapter is feature-complete | `registry.tsx` now renders `<PathsAndParams />` with `Readme.md?raw` as the Note tab, and the `ch-09` nav entry is corrected. One correction on the way in: `href` pointed at `Ch-9-Paths-and-Params`, a branch that does not exist — the real name has no "and". Only §8 browser verification is left |
 
 <!-- TODO: add your own rows as you build. Especially the reversals —
      "tried X, it didn't work, went with Y" is the most valuable kind of entry
@@ -624,3 +668,26 @@ and `Ch-8`.
 
 Target layout and the ordered execution steps are in `docs/TYPES_AUDIT.md` §5. **Do not apply any
 of it from this branch.**
+
+---
+
+## 12. Chapter 8 overlap — migration note
+
+*Moved here from `Readme.md` on 2026-08-28, so that file can be pure learner-facing notes.*
+
+Chapter 9 is the chapter that fixes how Chapter 8 built its URLs. **Ch-8 is deliberately left
+unchanged** (§0) — this table records what *would* change, and why it matters.
+
+| Ch8 call site | Today | With `buildUrl` | Bug it removes |
+|---|---|---|---|
+| `useApi.ts:10` | `url + "?limit=1"` | `buildUrl(BASE, ["users"], { limit: 1 })` | breaks if `url` already contains a `?` |
+| `useApi.ts:21` | `` `${url}?limit=17&skip=${skip}` `` | `buildUrl(BASE, ["users"], { limit: 17, skip })` | no encoding; magic `17` |
+| `useApi.ts:44` (PUT) | `` `${url}/${userId}` `` | `buildUrl(BASE, ["users", String(userId)])` | `//` if `url` ends in a slash |
+| `useApi.ts:54` (DELETE) | `` `${url}/${userId}` `` | `buildUrl(BASE, ["users", String(userId)])` | same |
+
+The line numbers cite **Ch8's `useApi.ts`**, which keeps that name — only Ch9's copy was renamed
+to `apiResource.ts` (§10, 2026-08-16).
+
+**Was Ch8 already RESTful?** Largely yes — `/users` + GET/POST versus `/users/{id}` + PUT/DELETE
+is textbook resource-oriented design. Ch8 got the *shape* right before the vocabulary for it
+existed; Ch9 supplies the vocabulary and fixes the string-concatenation underneath.

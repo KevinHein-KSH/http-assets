@@ -92,7 +92,9 @@ export const chapters: Chapter[] = [
     id: "ch-09",
     label: "Chapter 9",
     kind: "chapter",
-    description: "Data Fetching",
+    description: "Paths and Parameters",
+    href: "https://github.com/KevinHein-KSH/http-assets/tree/Ch-9-Paths-Params",
+    externalUrl: "https://your-live-demo-url.example.com",
   },
   { id: "ch-10", label: "Chapter 10", kind: "chapter", description: "Testing" },
   {
