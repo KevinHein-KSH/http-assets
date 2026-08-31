@@ -138,6 +138,7 @@ export default function HeaderApiKey() {
             />
             <Button
               variant="contained"
+              className="branch-btn"
               onClick={() => init(domainState)}
               disabled={!domainState.trim()}
             >
