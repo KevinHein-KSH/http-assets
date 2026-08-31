@@ -26,7 +26,7 @@ export default function UserToolbar({
           <Button
             variant="contained"
             color="secondary"
-            className="mr-2"
+            className="branch-btn mr-2"
             onClick={onFetch}
             disabled={loading}
           >
@@ -48,6 +48,7 @@ export default function UserToolbar({
           <Button
             variant="contained"
             color="secondary"
+            className="branch-btn"
             onClick={onCreate}
             disabled={loading || !canCreate}
           >
