@@ -106,7 +106,7 @@ export default function ErrorDemo() {
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="e.g. Luke Skywalker"
               />
-              <Button variant="contained" size="small" onClick={validateInput}>
+              <Button variant="contained" size="small" className="branch-btn" onClick={validateInput}>
                 Validate
               </Button>
             </Stack>
@@ -126,7 +126,7 @@ export default function ErrorDemo() {
               Press the button to intentionally trigger a reference error and catch it with
               try/catch so the UI keeps running.
             </Typography>
-            <Button variant="contained" size="small" onClick={runSynchronousError}>
+            <Button variant="contained" size="small" className="branch-btn" onClick={runSynchronousError}>
               Trigger sync error
             </Button>
           </Paper>
@@ -140,6 +140,7 @@ export default function ErrorDemo() {
               <Button
                 variant="contained"
                 size="small"
+                className="branch-btn"
                 disabled={loading}
                 onClick={() => fetchTodo("https://jsonplaceholder.typicode.com/todos/1")}
               >
@@ -157,6 +158,7 @@ export default function ErrorDemo() {
               <Button
                 variant="text"
                 size="small"
+                className="branch-btn"
                 onClick={() => setFetchState(null)}
                 disabled={loading}
               >
@@ -175,7 +177,7 @@ export default function ErrorDemo() {
         <Paper variant="outlined" sx={{ p: 2, flex: 1, minWidth: 0 }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1 }}>
             <Typography variant="subtitle2">Recent events</Typography>
-            <Button size="small" variant="contained" onClick={() => setLog([])}>
+            <Button size="small" variant="contained" className="branch-btn" onClick={() => setLog([])}>
               Clear
             </Button>
           </Stack>
