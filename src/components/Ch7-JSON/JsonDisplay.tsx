@@ -98,7 +98,7 @@ export default function JsonDisplay() {
               <div className="flex justify-end">
                 <Button
                   variant="contained"
-                  className="btn"
+                  className="branch-btn"
                   onClick={() => handleParseJson(inputParsedJson)}
                 >
                   Parse JSON
@@ -132,7 +132,7 @@ export default function JsonDisplay() {
               <div className="flex justify-end">
                 <Button
                   variant="contained"
-                  className="btn"
+                  className="branch-btn"
                   onClick={() => handleStringifyJson(inputStringifiedJson)}
                 >
                   Stringify JSON
